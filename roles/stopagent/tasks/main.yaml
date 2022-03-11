@@ -2,7 +2,7 @@
 # stop all the ambari agents
 - hosts: datanodes
   vars:
-   var_remote_user: centos
+   var_remote_user: ubuntu
    var_sudo: yes
   remote_user: "{{ var_remote_user }}"
   sudo: "{{ var_sudo }}"
@@ -11,7 +11,7 @@
     command: ambari-agent stop
 - hosts: masternodes
   vars:
-   var_remote_user: centos
+   var_remote_user: ubuntu
    var_sudo: yes
   remote_user: "{{ var_remote_user }}"
   sudo: "{{ var_sudo }}"
