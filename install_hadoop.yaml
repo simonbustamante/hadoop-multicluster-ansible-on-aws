@@ -1,0 +1,35 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  roles:
+    - {role: common}
+    
+- hosts: datanodes
+  remote_user: ubuntu
+  roles:
+    - {role: datanode}
+
+- hosts: masternodes 
+  remote_user: ubuntu
+  roles:
+    - {role: masternode}
+
+# - hosts: datanodes
+#   remote_user: ubuntu
+#   roles:
+#     - {role: yarn}
+
+
+# - hosts: ambariserver
+#   remote_user: ec2-user
+#   become: true
+#   roles:
+#     - {role: utils}
+
+
+
+# - hosts: ambariserver
+#   remote_user: ec2-user
+#   become: yes
+#   roles:
+#     - {role: deploy_cluster, ha: "yes"}

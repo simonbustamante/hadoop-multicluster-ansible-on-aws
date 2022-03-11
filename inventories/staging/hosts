@@ -1,0 +1,10 @@
+ 
+[masternodes]
+ 
+master1.ansible.local ansible_ssh_host=172.30.128.185
+[datanodes]
+datanode1.ansible.local ansible_ssh_host=172.30.128.182
+datanode2.ansible.local ansible_ssh_host=172.30.128.174
+datanode3.ansible.local ansible_ssh_host=172.30.128.184
+[all:vars]
+ansible_ssh_common_args='-o ProxyCommand=ssh -i /home/sabb/govsol-2021.pem -W %h:%p -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ubuntu@18.221.246.152'

@@ -1,0 +1,6 @@
+group_vars/all.yaml
+cred.yml
+roles/common/files/privatekey
+roles/common/files/publickey
+roles/common/files/hadoop-3.2.1.tar.gz
+roles/create_ec2_vpc/files/aws.pub

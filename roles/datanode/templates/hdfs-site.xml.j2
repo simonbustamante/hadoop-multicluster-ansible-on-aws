@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+<property>
+<name>dfs.namenode.name.dir</name>
+<value>{{ hadoop_folder }}/nameNode</value>
+</property>
+<property>
+<name>dfs.datanode.data.dir</name>
+<value>{{ hadoop_folder }}/dataNode</value>
+</property>
+<property>
+<name>dfs.replication</name>
+<value>3</value>
+</property>
+
+</configuration>

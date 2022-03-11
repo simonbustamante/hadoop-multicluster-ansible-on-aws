@@ -1,0 +1,12 @@
+<configuration>
+{% for host in groups['masternodes'] %}
+<property>
+<name>yarn.resourcemanager.hostname</name>
+<value>{{ hostvars[host]['inventory_hostname'] }}</value>
+</property>
+<property>
+    <name>yarn.nodemanager.localizer.address</name>
+    <value>{{ hostvars[host]['inventory_hostname'] }}:10200</value>
+</property>
+{% endfor %}
+</configuration>

@@ -1,0 +1,6 @@
+{% for host in groups['all'] %}
+Host {{ hostvars[host]['inventory_hostname'] }}
+  HostName {{ hostvars[host]['inventory_hostname'] }}
+  IdentityFile /home/ubuntu/.ssh/privatekey
+  User ubuntu
+{% endfor %}

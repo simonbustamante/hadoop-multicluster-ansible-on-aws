@@ -1,0 +1,167 @@
+---
+# tasks file for hadoop_slave
+
+# - name: Update ubuntu repositories on slave
+#   become: true
+#   command: "apt-get update -y"
+
+# - name: Install java 8 slave
+#   become: true
+#   command: "apt install openjdk-8-jdk -y"
+
+# - name: Download Hadoop 3.2.1 from public repositories
+#   command: "wget -P ~ https://archive.apache.org/dist/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz"
+
+# # UNCOMMENT ABOVE COMMAND AND COMMENT NEXT COMMAND IF YOU WANT TO DOWNLOAD DIRECTLY FROM APACHE
+# # DOWNLOAD hadoop-3.2.1.tar.gz independently and copy it in role/file folder
+
+# # - name: copying Hadoop 3.2.1 from local 
+# #   copy:
+# #     src: "hadoop-3.2.1.tar.gz"
+# #     dest: "/home/ubuntu/hadoop-3.2.1.tar.gz"
+
+
+# - name: Untar downloaded version
+#   command: "sudo tar xzf hadoop-3.2.1.tar.gz"
+
+# - name: Changing folder name
+#   command: "mv /home/ubuntu/hadoop-3.2.1 /home/ubuntu/hadoop"
+
+# - name: Configure JAVA_HOME on hadoop-env.sh file 
+#   become: true
+#   copy:
+#     src: "hadoop-env.sh"
+#     dest: "/home/ubuntu/hadoop/etc/hadoop/hadoop-env.sh"
+
+# - name: Changing hadoop folder
+#   become: true
+#   command: "mv /home/ubuntu/hadoop /usr/local/hadoop"
+
+# - name: create logs folder
+#   become: true
+#   command: "mkdir -p /usr/local/hadoop/logs"
+
+# - name: Create data folder
+#   become: true
+#   command: "mkdir {{hadoop_folder}}"
+
+# - name: Changing owner to hadoop folder
+#   become: true
+#   command: "chown {{user}}:{{user}} -R /usr/local/hadoop"
+
+# - name: Setting path environment
+#   become: true
+#   copy:
+#     src: "environment"
+#     dest: "/etc/environment"
+
+# - name: source /etc/environment
+#   shell: source /etc/environment
+#   args:
+#     executable: /bin/bash
+
+# - name: Verifying JAVA_HOME
+#   command: "echo $JAVA_HOME"
+
+- name: Configure core-site file
+  become: true
+  template:
+    src: "core-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/core-site.xml"
+
+- name: Configure hdfs-site file
+  become: true
+  template:
+    src: "hdfs-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/hdfs-site.xml"
+
+- name: Configure workers
+  become: true
+  template:
+    src: "workers.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/workers"
+
+- name: Configure yarn-site file
+  template:
+    src: "yarn-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/yarn-site.xml"
+
+
+
+# - name: Set hostname for individual host
+#   template: src=hostname.j2 dest=/etc/hostname
+
+# - name: ensure that the new hostname is preserved between restarts/reboots
+#   command: "echo preserve_hostname: true >> /etc/cloud/cloud.cfg"
+
+# - name: Update hostname without reboot server
+#   shell: 'sudo hostname -F /etc/hostname'
+
+# - name: Add hostname fqdn
+#   template: src=hosts.j2 dest=/etc/hosts
+
+# - name: Creating user for hadoop
+#   command: "adduser --disabled-password --gecos '' huser"
+
+# - name: Creating group for hadoop
+#   command: "groupadd hadoopuser"
+
+# - name: Permissions to huser
+#   command: "usermod -aG hadoopuser huser"
+
+# - name: Changing owner to hadoop folder 
+#   command: "chown huser:root -R /usr/local/hadoop/" 
+  
+# - name: Changind permissions to hadoop folder
+#   command: "chmod g+rwx -R /usr/local/hadoop/"
+
+# - name: adding user to sudoerlist
+#   command: "adduser huser sudo"
+
+# - name: Changing user to huser
+#   command: "sudo su - huser"
+
+#- name: Creating ssh key for huser
+#  command: "ssh-keygen -t rsa"
+
+
+
+
+
+# - name: Download Java Software
+#   get_url:
+#     url: https://mirrors.huaweicloud.com/java/jdk/8u171-b11/jdk-8u171-linux-x64.rpm
+#     dest: /root/java.rpm
+
+# - name: Download Hadoop Software
+#   get_url:
+#     url: https://archive.apache.org/dist/hadoop/core/hadoop-1.2.1/hadoop-1.2.1-1.x86_64.rpm
+#     dest: /root/hadoop.rpm
+ 
+# - name: Install Packages
+#   command : "rpm -i /root/{{ item }} --force"
+#   loop: "{{ pkgs_name }}"
+
+# - name: Configure core-site file 
+#   template:
+#     src: "core-site.xml.j2"
+#     dest: "/etc/hadoop/core-site.xml"
+
+# - name: Configure hdfs-site file 
+#   template:
+#     src: "hdfs-site.xml.j2"
+#     dest: "/etc/hadoop/hdfs-site.xml"
+        
+# - name: Creting directory for namenode
+#   file:
+#     path: "{{ hadoop_folder }}"
+#     state: directory
+
+# - name: Starting namenode service
+#   shell: "hadoop-daemon.sh start datanode"
+
+# - name: Making Hadoop Daemon Service Permanent
+#   lineinfile:
+#     path: /etc/rc.d/rc.local
+#     line: hadoop-daemon.sh start datanode
+#     mode: '0755'

@@ -1,0 +1,8 @@
+<configuration>
+{% for host in groups['masternodes'] %}
+<property>
+<name>yarn.resourcemanager.hostname</name>
+<value>{{ hostvars[host]['inventory_hostname'] }}</value>
+</property>
+{% endfor %}
+</configuration>

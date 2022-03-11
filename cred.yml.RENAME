@@ -1,0 +1,10 @@
+##you need to encrypt your amazon access and secret keys
+##run in termanal  "ansible-vault create cred.yml"
+##it will be requested a  "New Vault password" set it as you like it
+##Confirm New Vault password
+##edit amazon access and secret keys as below
+access_key: ABCDEFGHIJK
+secret_key: abcdefghijk12345
+
+##save the file and close it
+## you will have an encrypted file with $ANSIBLE_VAULT;1.1;AES256

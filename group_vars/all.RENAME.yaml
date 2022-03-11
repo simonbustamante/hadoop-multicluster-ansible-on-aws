@@ -1,0 +1,64 @@
+---
+#========== AWS Setting (aws image - original is Centos7 but is not available on amazon) 
+region: us-east-2
+vpc_name: myvpc
+key_name: mykeypair
+#ubuntu 18.04 ami-03a0c45ebc70f98ea
+#ubuntu 20.04 ami-0fb653ca2d3203ac1
+#amazon ami-059e474a5b37e133b
+image_name: ami-03a0c45ebc70f98ea
+cleanup_cloud: true
+dns_zone: ansible.local
+ttl: 60
+public_volume_size: 20
+private_volume_size: 20
+public_instance_type: t2.xlarge
+private_instance_type: t2.xlarge
+cidr_block: 172.30.0.0/16
+cidr_pub_1: 172.30.16.0/20
+cidr_pub_2: 172.30.32.0/20
+cidr_pri_1: 172.30.128.0/24
+cidr_pri_2: 172.30.254.0/24
+az_1: us-east-2a
+az_2: us-east-2b
+
+
+##### Note: Make sure that number_masters_az_1 + number_masters_az_2 = number_masters and number_datanodes_az_1 + number_datanodes_az_2 = number_datanodes
+number_masters: 1
+number_datanodes: 2
+number_hives: 1
+number_masters_az_1: 1
+number_masters_az_2: 0
+number_datanodes_az_1: 2
+number_datanodes_az_2: 0
+number_hives_az_1: 1
+number_hives_az_2: 0
+
+path_hosts_group: inventories/staging
+private_key: /home/user/mykeypair.pem 
+# Must be absolute path to your private key
+
+#========= Ambari Setting
+#remote_user: ec2-user
+
+# var_java_ver: 8u131
+# var_java_build: b11
+
+# var_ambari_server: 172.30.128.156
+# var_ambari_user: admin
+# var_ambari_password: admin
+
+# The Ambari version you want to deploy 
+#var_ambari_version: http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.6.2.2/ambari.repo 
+# var_ambari_version: https://archive.apache.org/dist/ambari/ambari-2.7.1/
+#https://docs.hortonworks.com/
+
+# mysql_connector_java_archive: mysql-connector-java-5.1.47.tar.gz
+# mysql_connector_java_url: https://dev.mysql.com/get/Downloads/Connector-J/{{ mysql_connector_java_archive }}
+#========== Bastion host
+bastion_ip: 3.16.61.175
+user: ubuntu
+ansible_ssh_common_args: '-o ProxyCommand="ssh -i {{ private_key }} -W %h:%p -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no {{ user }}@{{ bastion_ip }}"'
+
+hadoop_folder: '/usr/local/hadoop/data'
+internal_public_key_hadoop: 'ssh-rsa AAAAB3NzaC1yc2EA .....internal hadoop ssh public key... Ru6Qm55b9ifBPnXc1ME'

@@ -1,0 +1,164 @@
+---
+- name: Update ubuntu repositories
+  become: true
+  command: "apt-get update -y"
+
+- name: Install java 8 slave
+  become: true
+  command: "apt install openjdk-8-jdk -y"
+
+- name: Download Hadoop 3.2.1 from public repositories
+  command: "wget -P ~ https://archive.apache.org/dist/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz"
+
+# UNCOMMENT ABOVE COMMAND AND COMMENT NEXT COMMAND IF YOU WANT TO DOWNLOAD DIRECTLY FROM APACHE
+# DOWNLOAD hadoop-3.2.1.tar.gz independently and copy it in role/file folder
+
+# - name: copying Hadoop 3.2.1 from local 
+#   copy:
+#     src: "hadoop-3.2.1.tar.gz"
+#     dest: "/home/ubuntu/hadoop-3.2.1.tar.gz"
+
+
+- name: Untar downloaded version
+  command: "sudo tar xzf hadoop-3.2.1.tar.gz"
+
+- name: Changing folder name
+  command: "mv /home/ubuntu/hadoop-3.2.1 /home/ubuntu/hadoop"
+
+- name: Configure JAVA_HOME on hadoop-env.sh file 
+  become: true
+  copy:
+    src: "hadoop-env.sh"
+    dest: "/home/ubuntu/hadoop/etc/hadoop/hadoop-env.sh"
+
+- name: Changing hadoop folder
+  become: true
+  command: "mv /home/ubuntu/hadoop /usr/local/hadoop"
+
+- name: create logs folder
+  become: true
+  command: "mkdir -p /usr/local/hadoop/logs"
+
+- name: Create data folder
+  become: true
+  command: "mkdir {{hadoop_folder}}"
+
+- name: Changing owner to hadoop folder
+  become: true
+  command: "chown {{user}}:{{user}} -R /usr/local/hadoop"
+
+- name: Setting path environment
+  become: true
+  copy:
+    src: "environment"
+    dest: "/etc/environment"
+
+- name: source /etc/environment
+  shell: source /etc/environment
+  args:
+    executable: /bin/bash
+
+- name: Verifying JAVA_HOME
+  command: "echo $JAVA_HOME"
+
+- name: Set hostname for individual host
+  become: true
+  template: src=hostname.j2 dest=/etc/hostname
+
+- name: ensure that the new hostname is preserved between restarts/reboots
+  become: true
+  command: "echo preserve_hostname: true >> /etc/cloud/cloud.cfg"
+
+- name: Update hostname without reboot server
+  shell: 'sudo hostname -F /etc/hostname'
+
+- name: Add hostname fqdn
+  become: true
+  template: src=hosts.j2 dest=/etc/hosts
+
+# - name: pdsh install
+#   become: true
+#   command: "apt-get install pdsh -y"
+
+# - name: pdsh with ssh
+#   lineinfile:
+#     dest: "~/.bashrc"
+#     insertafter: EOF
+#     state: present
+#     line: "export PDSH_RCMD_TYPE=ssh"
+
+# - name: creating a privatekey file touch
+#   command: "touch .ssh/privatekey"
+
+# - name: adding hadoop internal private key
+#   lineinfile:
+#     dest: "~/.ssh/authorized_keys"
+#     insertafter: EOF
+#     state: present
+#     line: 
+#       "{{internal_private_key_hadoop}}"
+
+- name: adding hadoop internal public key
+  lineinfile:
+    dest: "~/.ssh/authorized_keys"
+    insertafter: EOF
+    state: present
+    line: 
+      "{{internal_public_key_hadoop}}"
+
+- name: coping hadoop internal privatekey
+  copy:
+    src: "privatekey"
+    dest: "/home/ubuntu/.ssh/"
+
+# - name: adding internal private key hadoop
+#   command: 'echo "{{internal_private_key_hadoop}}" >> .ssh/privatekey'
+
+- name: change internal privatekey permissions
+  command: "chmod 600 .ssh/privatekey"
+
+- name: ssh stack
+  template: src=config.j2 dest=/home/ubuntu/.ssh/config
+
+
+# - name: install dependency packages (RedHat)
+#   when: ansible_os_family == 'RedHat'
+#   yum: name={{ item }} state=latest
+#   with_items:
+#     - zip
+#     - unzip
+#     - wget
+#     - sysstat
+#     - ntp
+    
+# - name: fetch java rpm (Redhat)
+#   when: ansible_os_family == 'RedHat'
+#   command: 'wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{ var_java_ver }}-{{ var_java_build }}/d54c1d3a095b4ff2b6607d096fa80163/jdk-{{ var_java_ver }}-linux-x64.rpm'
+
+# - name: install java runtime environment (RedHat)
+#   when: ansible_os_family == 'RedHat'
+#   yum: name=jdk-{{ var_java_ver }}-linux-x64.rpm state=present
+
+# - name: Set java environment
+#   template: src=java.sh.j2 dest=/etc/profile.d/java.sh mode=0755
+
+# - name: clean up
+#   command: 'rm -f jdk-{{ var_java_ver }}-linux-x64.rpm'
+
+# - name: Create java folder
+#   shell: 'sudo mkdir -p /usr/share/java/'
+
+# - name: Download MySQL JDBC Connector
+#   get_url:
+#     url: "{{ mysql_connector_java_url }}"
+#     dest: "/tmp/{{ mysql_connector_java_archive }}"
+
+# - name: Unarchive MySQL JDBC Connector package
+#   shell: |
+#     TMP_DIR=`mktemp -d`
+#     tar zxvf /tmp/{{ mysql_connector_java_archive }} -C $TMP_DIR --strip-components=1
+#     sudo cp $TMP_DIR/mysql-connector-java-*-bin.jar /usr/share/java/mysql-connector-java.jar
+#     sudo chmod 755 /usr/share/java/mysql-connector-java.jar
+   
+
+    

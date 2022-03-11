@@ -1,0 +1,6 @@
+#wordcount ok a book called 20417-8.txt using streaming library and map reduce with python
+hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar \
+-mapper mapper.py  -reducer reducer.py \
+-input /20417-8.txt \
+-output /new
+

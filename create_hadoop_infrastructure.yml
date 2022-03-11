@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  vars_files:
+    - cred.yml
+  environment:
+    ANSIBLE_HOST_KEY_CHECKING: False
+
+  roles:
+    - { role: create_ec2_vpc, mutiAZ: "no", tags: [ "create" ] }
+    - { role: clean-ec2-vpc, mutiAZ: "no", tags: [ "clean" ] }
+
+

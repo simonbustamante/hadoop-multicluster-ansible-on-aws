@@ -1,0 +1,14 @@
+---
+#tasks file for roles/yarn
+- name: Configure yarn-site file
+  template:
+    src: "yarn-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/yarn-site.xml"
+
+# - name: Wait 1 minute before start service
+#   pause:
+#     minutes: 1
+###############################################
+- name: start yarn service
+  shell: "start-yarn.sh"
+###############################################
