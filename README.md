@@ -54,7 +54,7 @@ roles:
 sudo ansible-playbook create_hadoop_infrastructure.yml --tags="create" --ask-vault-pass
 ```
 
-##### Clean AWS and Instances
+##### Clean AWS VPC and Instances
 
 ```
 sudo ansible-playbook create_hadoop_infrastructure.yml --tags="clean" --ask-vault-pass

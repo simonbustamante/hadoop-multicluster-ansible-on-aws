@@ -59,6 +59,7 @@ private_key: /home/user/mykeypair.pem
 bastion_ip: 3.16.61.175
 user: ubuntu
 ansible_ssh_common_args: '-o ProxyCommand="ssh -i {{ private_key }} -W %h:%p -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no {{ user }}@{{ bastion_ip }}"'
+mysql_root_password: securepassword1234!
 
 hadoop_folder: '/usr/local/hadoop/data'
 internal_public_key_hadoop: 'ssh-rsa AAAAB3NzaC1yc2EA .....internal hadoop ssh public key... Ru6Qm55b9ifBPnXc1ME'

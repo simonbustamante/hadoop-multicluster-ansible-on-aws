@@ -14,10 +14,10 @@
   roles:
     - {role: masternode}
 
-# - hosts: datanodes
-#   remote_user: ubuntu
-#   roles:
-#     - {role: yarn}
+- hosts: hives
+  remote_user: ubuntu
+  roles:
+    - {role: hive}
 
 
 # - hosts: ambariserver

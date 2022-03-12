@@ -1,0 +1,11 @@
+[Unit] 
+Description=Hive metastore 
+After=network.target 
+ 
+[Service] 
+User=ubuntu 
+Group=www-data 
+ExecStart=/usr/local/hive/bin/hive --service metastore 
+ 
+[Install] 
+WantedBy=multi-user.target
