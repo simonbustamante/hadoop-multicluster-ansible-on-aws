@@ -7,8 +7,8 @@
   become: true
   command: "apt install openjdk-8-jdk -y"
 
-- name: Download Hadoop 3.2.1 from public repositories
-  command: "wget -P ~ https://archive.apache.org/dist/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz"
+- name: Download Hadoop 3.3.2 from public repositories
+  command: "wget -P ~ https://archive.apache.org/dist/hadoop/common/hadoop-3.3.2/hadoop-3.3.2.tar.gz"
 
 # UNCOMMENT ABOVE COMMAND AND COMMENT NEXT COMMAND IF YOU WANT TO DOWNLOAD DIRECTLY FROM APACHE
 # DOWNLOAD hadoop-3.2.1.tar.gz independently and copy it in role/file folder
@@ -20,10 +20,10 @@
 
 
 - name: Untar downloaded version
-  command: "sudo tar xzf hadoop-3.2.1.tar.gz"
+  command: "sudo tar xzf hadoop-3.3.2.tar.gz"
 
 - name: Changing folder name
-  command: "mv /home/ubuntu/hadoop-3.2.1 /home/ubuntu/hadoop"
+  command: "mv /home/ubuntu/hadoop-3.3.2 /home/ubuntu/hadoop"
 
 - name: Configure JAVA_HOME on hadoop-env.sh file 
   become: true

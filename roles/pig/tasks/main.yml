@@ -1,0 +1,61 @@
+---
+# tasks file for roles/pig
+- name: Configure core-site file
+  become: true
+  template:
+    src: "core-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/core-site.xml"
+
+- name: Download pig 0.17.0
+  command: "wget -P ~ https://downloads.apache.org/pig/latest/pig-0.17.0.tar.gz"
+
+- name: Untar downloaded version
+  command: "sudo tar -xvf pig-0.17.0.tar.gz"
+
+- name: Changing pig folder
+  become: true
+  command: "mv pig-0.17.0 /usr/local/pig"
+
+- name: Changing owner to pig folder
+  become: true
+  command: "chown {{user}}:{{user}} -R /usr/local/pig"
+
+- name: adding Pig HOME
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export PIG_HOME=/usr/local/pig
+
+- name: adding PATH
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export PATH=$PATH:$PIG_HOME/bin
+
+- name: adding Conf
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export PIG_CONF_DIR="$PIG_HOME/conf"
+
+- name: adding Conf
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export PIG_CLASSPATH="$PIG_CONF_DIR"
+
+- name: source
+  shell: source ~/.bashrc
+  args:
+    executable: /bin/bash
+
+
+

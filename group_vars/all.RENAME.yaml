@@ -27,12 +27,15 @@ az_2: us-east-2b
 number_masters: 1
 number_datanodes: 2
 number_hives: 1
+number_pigs: 1
 number_masters_az_1: 1
 number_masters_az_2: 0
 number_datanodes_az_1: 2
 number_datanodes_az_2: 0
 number_hives_az_1: 1
 number_hives_az_2: 0
+number_pigs_az_1: 1
+number_pigs_az_2: 0
 
 path_hosts_group: inventories/staging
 private_key: /home/user/mykeypair.pem 

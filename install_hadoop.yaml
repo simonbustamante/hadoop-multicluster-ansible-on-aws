@@ -19,17 +19,9 @@
   roles:
     - {role: hive}
 
-
-# - hosts: ambariserver
-#   remote_user: ec2-user
-#   become: true
-#   roles:
-#     - {role: utils}
+- hosts: pigs
+  remote_user: ubuntu
+  roles:
+    - {role: pig}
 
 
-
-# - hosts: ambariserver
-#   remote_user: ec2-user
-#   become: yes
-#   roles:
-#     - {role: deploy_cluster, ha: "yes"}
