@@ -54,6 +54,16 @@
     aws_secret_key: "{{ secret_key }}"
   register: pig_private_ec2_facts
 
+- name: Facts private EC2 instance
+  ec2_instance_info:
+    region: "{{ region }}"
+    filters:
+      "tag:Role": spark
+      instance-state-name: running
+    aws_access_key: "{{ access_key }}"
+    aws_secret_key: "{{ secret_key }}"
+  register: spark_private_ec2_facts
+
 - name: Clean content inventories file
   shell: echo " " > "{{ path_hosts_group }}"/hosts
 
@@ -132,6 +142,23 @@
   with_together: 
         - "{{ pig_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
         - "{{ pig_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+
+- name: Write Spark Servers
+  lineinfile:
+    dest: "{{ path_hosts_group }}/hosts"
+    insertafter: EOF
+    line: "[sparks]"
+
+- name: Write Spark Servers
+  lineinfile:
+    dest: "{{ path_hosts_group }}/hosts"
+    insertafter: EOF
+    line: "{{ item.0 }} ansible_ssh_host={{ item.1 }}"
+    state: present
+    create: yes
+  with_together: 
+        - "{{ spark_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+        - "{{ spark_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
 
 
 # - name: Change ambari server IP

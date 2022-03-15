@@ -1,0 +1,85 @@
+---
+# tasks file for spark
+
+- name: Configure core-site file
+  become: true
+  template:
+    src: "core-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/core-site.xml"
+
+- name: Download Spark 3.2.1
+  command: "wget -P ~ https://dlcdn.apache.org/spark/spark-3.2.1/spark-3.2.1-bin-hadoop3.2.tgz"
+
+
+- name: Untar downloaded version
+  command: "sudo tar -xvf spark-3.2.1-bin-hadoop3.2.tgz"
+
+- name: Changing Spark folder
+  become: true
+  command: "mv spark-3.2.1-bin-hadoop3.2 /usr/local/spark"
+
+- name: Changing owner to spark folder
+  become: true
+  command: "chown {{user}}:{{user}} -R /usr/local/spark"
+
+- name: adding HOME
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export SPARK_HOME=/usr/local/spark
+
+- name: adding PATH
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export PATH=/usr/local/spark/bin:$PATH
+
+- name: adding Hadoop Conf Dir
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+
+# - name: adding yarn Conf Dir
+#   lineinfile:
+#     dest: "~/.bashrc"
+#     insertafter: EOF
+#     state: present
+#     line:
+#       export YARN_CONF_DIR=/usr/local/hadoop/etc/hadoop
+
+- name: source
+  shell: source ~/.bashrc
+  args:
+    executable: /bin/bash
+
+- name: Configure spark default 
+  become: true
+  template:
+    src: "spark-defaults.conf.j2"
+    dest: "/usr/local/spark/conf/spark-defaults.conf"
+
+- name: Configure mapred-site file
+  become: true
+  template:
+    src: "mapred-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/mapred-site.xml"
+
+- name: Configure yarn-site file
+  become: true
+  template:
+    src: "yarn-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/yarn-site.xml"
+
+- name: dir spark-logs
+  command: "hadoop fs -mkdir /spark-logs"
+
+  #SPARK COMMAND TO TEST CONFIGURATION BELOW
+  #YOU NEED TO START RESOURCE MANAGER IN MASTER
+  #spark-submit --deploy-mode cluster --class org.apache.spark.examples.SparkPi /usr/local/spark/examples/jars/spark-examples_2.12-3.2.1.jar 10

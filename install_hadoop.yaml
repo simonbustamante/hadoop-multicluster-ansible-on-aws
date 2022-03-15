@@ -24,4 +24,9 @@
   roles:
     - {role: pig}
 
+- hosts: sparks
+  remote_user: ubuntu
+  roles:
+    - {role: spark}
+
 
