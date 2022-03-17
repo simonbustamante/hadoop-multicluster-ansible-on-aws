@@ -1,32 +1,42 @@
 ---
-- hosts: all
-  remote_user: ubuntu
-  roles:
-    - {role: common}
+# - hosts: all
+#   remote_user: ubuntu
+#   roles:
+#     - {role: common}
     
-- hosts: datanodes
-  remote_user: ubuntu
-  roles:
-    - {role: datanode}
+# - hosts: datanodes
+#   remote_user: ubuntu
+#   roles:
+#     - {role: datanode}
 
-- hosts: masternodes 
-  remote_user: ubuntu
-  roles:
-    - {role: masternode}
+# - hosts: masternodes 
+#   remote_user: ubuntu
+#   roles:
+#     - {role: masternode}
 
-- hosts: hives
-  remote_user: ubuntu
-  roles:
-    - {role: hive}
+# - hosts: hives
+#   remote_user: ubuntu
+#   roles:
+#     - {role: hive}
 
-- hosts: pigs
-  remote_user: ubuntu
-  roles:
-    - {role: pig}
+# - hosts: pigs
+#   remote_user: ubuntu
+#   roles:
+#     - {role: pig}
 
-- hosts: sparks
+# - hosts: sparks
+#   remote_user: ubuntu
+#   roles:
+#     - {role: spark}
+
+- hosts: sqoops
   remote_user: ubuntu
   roles:
-    - {role: spark}
+    - {role: sqoop}
+
+# - hosts: oozies
+#   remote_user: ubuntu
+#   roles:
+#     - {role: oozie}
 
 

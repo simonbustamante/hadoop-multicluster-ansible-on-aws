@@ -1,0 +1,160 @@
+---
+# tasks file for roles/sqoop
+## run this commands to import
+#sqoop import --connect 'jdbc:postgresql://172.30.128.226:5432/main?ssl=false&sslfactory=org.postgresql.ssl.NonValidatingFactory' --username 'main' -P --table 'product' --target-dir 'product'
+#sqoop import-all-tables "-Dorg.apache.sqoop.splitter.allow_text_splitter=true"  --connect 'jdbc:postgresql://172.30.128.226:5432/main?false&sslfactory=org.postgresql.ssl.NonValidatingFactory' --username 'main' -P --warehouse-dir '/'  --exclude-tables 'doctrine_migration_versions,admin'
+
+
+- name: Configure mapred-site file
+  become: true
+  template:
+    src: "mapred-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/mapred-site.xml"
+
+- name: Configure yarn-site file
+  become: true
+  template:
+    src: "yarn-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/yarn-site.xml"
+
+- name: Configure core-site file
+  become: true
+  template:
+    src: "core-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/core-site.xml"
+
+- name: Download Sqoop 1.4.7
+  command: "wget -P ~ http://archive.apache.org/dist/sqoop/1.4.7/sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz"
+
+- name: Untar downloaded version
+  command: "sudo tar -xvf sqoop-1.4.7.bin__hadoop-2.6.0.tar.gz"
+
+- name: Changing Sqoop folder
+  become: true
+  command: "mv sqoop-1.4.7.bin__hadoop-2.6.0 /usr/local/sqoop"
+
+- name: Changing owner to sqoop folder
+  become: true
+  command: "chown {{user}}:{{user}} -R /usr/local/sqoop"
+
+- name: adding hadoop
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export HADOOP_HOME=/usr/local/hadoop
+
+- name: adding HOME
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export SQOOP_HOME=/usr/local/sqoop
+
+- name: adding PATH
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export PATH=$PATH:$SQOOP_HOME/bin
+
+- name: adding Hadoop Conf Dir
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+
+- name: adding Sqoop Conf Dir
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export SQOOP_CONF_DIR=$SQOOP_HOME/conf
+
+- name: adding hadoop common
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export HADOOP_COMMON_HOME=$HADOOP_HOME
+
+- name: adding hdfs common
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export HADOOP_HDFS_HOME=$HADOOP_HOME
+
+- name: adding mapreduce common
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export HADOOP_MAPRED_HOME=$HADOOP_HOME
+
+- name: adding yarn common
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export HADOOP_YARN_HOME=$HADOOP_HOME
+
+- name: adding Sqoop Conf Dir
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export SQOOP_CONF=$SQOOP_HOME/conf
+
+
+- name: source
+  shell: source ~/.bashrc
+  args:
+    executable: /bin/bash
+
+- name: Download mysql connector
+  command: "wget -P ~ https://cdn.mysql.com//Downloads/Connector-J/mysql-connector-java_8.0.28-1ubuntu21.10_all.deb"
+
+- name: install mysql connector
+  become: true
+  apt: "deb=/home/ubuntu/mysql-connector-java_8.0.28-1ubuntu21.10_all.deb"
+
+- name: copy connect to sqoop
+  command: "cp /usr/share/java/mysql-connector-java-8.0.28.jar /usr/local/sqoop/lib/"
+
+- name: Download postgres connector
+  command: "wget -P ~ https://jdbc.postgresql.org/download/postgresql-42.3.3.jar"
+
+- name: copy connect to sqoop
+  command: "mv postgresql-42.3.3.jar /usr/local/sqoop/lib/"
+
+- name: Download common lang 2.6 fix
+  command: "wget -P ~ https://dlcdn.apache.org//commons/lang/binaries/commons-lang-2.6-bin.tar.gz"
+
+- name: Untar downloaded version
+  command: "tar -xvf commons-lang-2.6-bin.tar.gz"
+
+- name: copy common lang 2.6 fix
+  command: "mv commons-lang-2.6/commons-lang-2.6.jar /usr/local/sqoop/lib/"
+
+
+
+
+
+
+
+  
+
+
+
