@@ -86,10 +86,15 @@
   become: true
   command: "systemctl enable mysql"
 
+# #if ubuntu 18
+# # - name: Install mysql java
+# #   become: true
+# #   command: "apt-get install libmysql-java -y"
+
+#else ubuntu 20
 - name: Install mysql java
   become: true
-  command: "apt-get install libmysql-java -y"
-
+  command: "apt-get install libmariadb-java -y"
 
 - name: link
   become: true
@@ -147,6 +152,8 @@
     mysql --defaults-file=debian.cnf -ne "{{ item }}"
   with_items:
     - ALTER USER 'root'@'localhost' IDENTIFIED BY '{{ mysql_root_password }}'
+    #- GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+    #- flush privileges;
   changed_when: False
 
 
@@ -169,7 +176,8 @@
     mysql --defaults-file=debian.cnf -ne "{{ item }}"
   with_items:
     - CREATE USER 'hiveuser'@'%' IDENTIFIED BY 'hivepassword';
-    - GRANT all on *.* to 'hiveuser'@localhost identified by 'hivepassword';
+    #- GRANT all on *.* to 'hiveuser'@'localhost' IDENTIFIED BY 'hivepassword';
+    - GRANT ALL PRIVILEGES ON *.* TO 'hiveuser'@'%' WITH GRANT OPTION;
     - flush privileges;
   changed_when: False
 

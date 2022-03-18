@@ -1,18 +1,18 @@
 ---
-- hosts: all
-  remote_user: ubuntu
-  roles:
-    - {role: common}
+# - hosts: all
+#   remote_user: ubuntu
+#   roles:
+#     - {role: common}
     
-- hosts: datanodes
-  remote_user: ubuntu
-  roles:
-    - {role: datanode}
+# - hosts: datanodes
+#   remote_user: ubuntu
+#   roles:
+#     - {role: datanode}
 
-- hosts: masternodes 
-  remote_user: ubuntu
-  roles:
-    - {role: masternode}
+# - hosts: masternodes 
+#   remote_user: ubuntu
+#   roles:
+#     - {role: masternode}
 
 - hosts: hives
   remote_user: ubuntu
@@ -38,5 +38,10 @@
   remote_user: ubuntu
   roles:
     - {role: oozie}
+
+- hosts: hues
+  remote_user: ubuntu
+  roles:
+    - {role: hue}
 
 
