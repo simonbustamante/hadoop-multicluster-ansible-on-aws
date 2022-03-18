@@ -1,2 +1,229 @@
 ---
-# tasks file for roles/oozie
+#tasks file for roles/oozie
+- name: Configure mapred-site file
+  become: true
+  template:
+    src: "mapred-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/mapred-site.xml"
+
+- name: Configure yarn-site file
+  become: true
+  template:
+    src: "yarn-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/yarn-site.xml"
+
+- name: Configure core-site file
+  become: true
+  template:
+    src: "core-site.xml.j2"
+    dest: "/usr/local/hadoop/etc/hadoop/core-site.xml"
+
+- name: Download Oozie 5.2.1
+  command: "wget -P ~ https://downloads.apache.org/oozie/5.2.1/oozie-5.2.1.tar.gz"
+
+- name: Untar downloaded version
+  command: "sudo tar -xvf oozie-5.2.1.tar.gz"
+
+- name: Changing Oozie folder
+  become: true
+  command: "mv oozie-5.2.1 /usr/local/oozie"
+
+- name: Changing owner to oozie folder
+  become: true
+  command: "chown {{user}}:{{user}} -R /usr/local/oozie"
+
+- name: Install maven
+  become: true
+  apt:
+    name: maven
+    state: present
+
+- name: adding hadoop
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export HADOOP_HOME=/usr/local/hadoop
+
+- name: adding HOME
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export OOZIE_HOME=/usr/local/oozie
+
+- name: adding PATH
+  lineinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    state: present
+    line:
+      export PATH=$PATH:$OOZIE_HOME/bin
+
+- name: source
+  shell: source ~/.bashrc
+  args:
+    executable: /bin/bash
+
+- name: maven install mkdistro
+  command: "bash /usr/local/oozie/bin/mkdistro.sh -DskipTests"
+
+- name: create libext folder
+  command: "mkdir -p /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext"
+
+- name: Download ext-2.2
+  command: "wget -P ~ http://archive.cloudera.com/gplextras/misc/ext-2.2.zip"
+
+- name: change folder
+  command: "mv ext-2.2.zip /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+
+- name: copy hadoop libs
+  shell: "cp /usr/local/hadoop/share/hadoop/common/*.jar /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+  args:
+    executable: /bin/bash
+
+- name: copy hadoop libs
+  shell: "cp /usr/local/hadoop/share/hadoop/common/lib/*.jar /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+  args:
+    executable: /bin/bash
+
+- name: copy hadoop libs
+  shell: "cp /usr/local/hadoop/share/hadoop/hdfs/*.jar /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+  args:
+    executable: /bin/bash
+
+- name: copy hadoop libs
+  shell: "cp /usr/local/hadoop/share/hadoop/hdfs/lib/*.jar /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+  args:
+    executable: /bin/bash
+
+- name: copy hadoop libs
+  shell: "cp /usr/local/hadoop/share/hadoop/mapreduce/*.jar /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+  args:
+    executable: /bin/bash
+
+- name: copy hadoop libs
+  shell: "cp /usr/local/hadoop/share/hadoop/mapreduce/lib-examples/*.jar /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+  args:
+    executable: /bin/bash
+
+- name: copy hadoop libs
+  shell: "cp /usr/local/hadoop/share/hadoop/yarn/*.jar /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+  args:
+    executable: /bin/bash
+
+- name: copy hadoop libs
+  shell: "cp /usr/local/hadoop/share/hadoop/yarn/lib/*.jar /usr/local/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1/libext/"
+  args:
+    executable: /bin/bash
+
+- name: Changing Oozie folder
+  become: true
+  command: "mv /usr/local/oozie /home/ubuntu/oozie"
+
+- name: Changing Oozie folder
+  become: true
+  command: "mv /home/ubuntu/oozie/distro/target/oozie-5.2.1-distro/oozie-5.2.1 /usr/local/oozie"
+
+- name: Install unzip
+  become: true
+  apt:
+    name: unzip
+    state: present
+
+
+- name: Configuring hive metastore
+  become: true
+  template: src=oozie-site.xml.j2 dest=/usr/local/oozie/conf/oozie-site.xml
+
+- name: Install mysql server
+  become: true
+  command: "apt-get update -y"
+
+- name: Ensure required packages are installed
+  become: true
+  apt:
+    name:
+      - mysql-server
+    state: latest
+
+- name: enable mysql
+  become: true
+  command: "systemctl enable mysql"
+
+- name: Install mysql java
+  become: true
+  command: "apt-get install libmysql-java -y"
+
+- name: link
+  become: true
+  command: "cp /usr/share/java/mysql-connector-java-5.1.45.jar /usr/local/oozie/libext/mysql-connector-java-5.1.45.jar"
+
+- name: Changing owner to oozie folder
+  become: true
+  command: "chown {{user}}:{{user}} -R /usr/local/oozie"
+
+
+- name: Add my.cnf to user home
+  become: true
+  command:  "cp /etc/mysql/debian.cnf ."
+
+- name: Add my.cnf to user home
+  become: true
+  command:  "chown ubuntu:ubuntu debian.cnf"
+
+- name: create db
+  command: |
+    mysql --defaults-file=debian.cnf -ne "{{ item }}"
+  with_items:
+    - create database oozie;
+  changed_when: False
+
+- name: create user
+  command: |
+    mysql --defaults-file=debian.cnf -ne "{{ item }}"
+  with_items:
+    - create user oozie@localhost identified by 'oozie';
+  changed_when: False
+
+- name: grant user
+  command: |
+    mysql --defaults-file=debian.cnf -ne "{{ item }}"
+  with_items:
+    - grant all privileges on oozie.* to oozie@localhost;
+  changed_when: False
+
+- name: setup
+  shell: "bash /usr/local/oozie/bin/oozie-setup.sh" # prepare-war -extjs /home/ubuntu/ext-2.2.zip"
+  args:
+    executable: /bin/bash
+
+- name: FIX
+  become: true
+  command: "mv /usr/local/oozie/embedded-oozie-server/webapp/WEB-INF/lib/hsqldb-1.8.0.10.jar /home/ubuntu/"
+
+- name: start
+  shell: "bash /usr/local/oozie/bin/oozied.sh start"
+  args:
+    executable: /bin/bash
+
+# # - name: oozie service
+# #   become: true
+# #   copy:
+# #     src: "oozie.service"
+# #     dest: "/etc/systemd/system/oozie.service"
+
+# # - name: enable oozie service
+# #   become: true
+# #   command: "systemctl start oozie.service"
+
+# # - name: enable oozie service
+# #   become: true
+# #   command: "systemctl enable oozie.service"
+
+# # - name: source ~/.bashrc
+# #   shell: source ~/.bashrc
+# #   args:
+# #     executable: /bin/bash

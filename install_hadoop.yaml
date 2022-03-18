@@ -34,9 +34,9 @@
   roles:
     - {role: sqoop}
 
-# - hosts: oozies
-#   remote_user: ubuntu
-#   roles:
-#     - {role: oozie}
+- hosts: oozies
+  remote_user: ubuntu
+  roles:
+    - {role: oozie}
 
 

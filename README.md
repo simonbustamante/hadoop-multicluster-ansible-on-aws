@@ -92,6 +92,19 @@ ssh -i /path/to/private/key -L 8088:master_host_address:8088 bastion_host_addres
 ```
 then check in your browser `localhost:8088/cluster`
 
+#### oozie
+
+```
+ssh -i /path/to/private/key -L 11000:oozie_host_address:11000 bastion_host_address
+```
+then check in your browser `localhost:11000/oozie`
+
+##### command line to check oozie status 
+```
+oozie admin -oozie http://localhost:11000/oozie -status
+```
+
+
 ### c. Stop Cluster
 
 To stop instances (UNDER CONSTRUCTION):
