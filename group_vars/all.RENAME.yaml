@@ -31,6 +31,7 @@ number_pigs: 1
 number_sparks: 1
 number_sqoops: 1
 number_oozies: 1
+number_hues: 1
 number_masters_az_1: 1
 number_masters_az_2: 0
 number_datanodes_az_1: 2
@@ -45,6 +46,8 @@ number_sqoops_az_1: 1
 number_sqoops_az_2: 0
 number_oozies_az_1: 1
 number_oozies_az_2: 0
+number_hues_az_1: 1
+number_hues_az_2: 0
 
 path_hosts_group: inventories/staging
 private_key: /home/user/mykeypair.pem 

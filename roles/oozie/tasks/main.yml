@@ -1,5 +1,8 @@
 ---
 #tasks file for roles/oozie
+## maybe it will required to access by ssh manualy and run below command
+## oozied.sh start
+
 - name: Configure mapred-site file
   become: true
   template:
