@@ -14,25 +14,25 @@
 #   roles:
 #     - {role: masternode}
 
-- hosts: hives
-  remote_user: ubuntu
-  roles:
-    - {role: hive}
+# - hosts: hives
+#   remote_user: ubuntu
+#   roles:
+#     - {role: hive}
 
-- hosts: pigs
-  remote_user: ubuntu
-  roles:
-    - {role: pig}
+# - hosts: pigs
+#   remote_user: ubuntu
+#   roles:
+#     - {role: pig}
 
-- hosts: sparks
-  remote_user: ubuntu
-  roles:
-    - {role: spark}
+# - hosts: sparks
+#   remote_user: ubuntu
+#   roles:
+#     - {role: spark}
 
-- hosts: sqoops
-  remote_user: ubuntu
-  roles:
-    - {role: sqoop}
+# - hosts: sqoops
+#   remote_user: ubuntu
+#   roles:
+#     - {role: sqoop}
 
 - hosts: oozies
   remote_user: ubuntu
