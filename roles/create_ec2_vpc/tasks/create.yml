@@ -225,7 +225,7 @@
       instance_type: "{{ public_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ public_volume_size }}"
           delete_on_termination: true
@@ -283,7 +283,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -313,7 +313,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -341,7 +341,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -373,7 +373,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -403,7 +403,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -431,7 +431,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -463,7 +463,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -493,7 +493,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -521,7 +521,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -554,7 +554,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -584,7 +584,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -612,7 +612,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -644,7 +644,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -674,7 +674,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -702,7 +702,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -734,7 +734,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -764,7 +764,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -792,7 +792,7 @@
       instance_type: "{{ private_instance_type }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -824,7 +824,7 @@
       instance_type: "{{ private_instance_b2b_b2c }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -854,7 +854,7 @@
       instance_type: "{{ private_instance_b2b_b2c }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -882,7 +882,7 @@
       instance_type: "{{ private_instance_b2b_b2c }}"
       image: "{{ image_name }}"
       volumes:
-        - device_name: /dev/xvda
+        - device_name: /dev/sda1
           volume_type: gp2
           volume_size: "{{ private_volume_size }}"
           delete_on_termination: true
@@ -916,7 +916,7 @@
 #       instance_type: "{{ private_instance_type }}"
 #       image: "{{ image_name }}"
 #       volumes:
-#         - device_name: /dev/xvda
+#         - device_name: /dev/sda1
 #           volume_type: gp2
 #           volume_size: "{{ private_volume_size }}"
 #           delete_on_termination: true
@@ -946,7 +946,7 @@
 #       instance_type: "{{ private_instance_type }}"
 #       image: "{{ image_name }}"
 #       volumes:
-#         - device_name: /dev/xvda
+#         - device_name: /dev/sda1
 #           volume_type: gp2
 #           volume_size: "{{ private_volume_size }}"
 #           delete_on_termination: true
@@ -974,7 +974,7 @@
 #       instance_type: "{{ private_instance_type }}"
 #       image: "{{ image_name }}"
 #       volumes:
-#         - device_name: /dev/xvda
+#         - device_name: /dev/sda1
 #           volume_type: gp2
 #           volume_size: "{{ private_volume_size }}"
 #           delete_on_termination: true
@@ -1006,7 +1006,7 @@
 #       instance_type: "{{ private_instance_type }}"
 #       image: "{{ image_name }}"
 #       volumes:
-#         - device_name: /dev/xvda
+#         - device_name: /dev/sda1
 #           volume_type: gp2
 #           volume_size: "{{ private_volume_size }}"
 #           delete_on_termination: true
@@ -1036,7 +1036,7 @@
 #       instance_type: "{{ private_instance_type }}"
 #       image: "{{ image_name }}"
 #       volumes:
-#         - device_name: /dev/xvda
+#         - device_name: /dev/sda1
 #           volume_type: gp2
 #           volume_size: "{{ private_volume_size }}"
 #           delete_on_termination: true
@@ -1064,7 +1064,7 @@
 #       instance_type: "{{ private_instance_type }}"
 #       image: "{{ image_name }}"
 #       volumes:
-#         - device_name: /dev/xvda
+#         - device_name: /dev/sda1
 #           volume_type: gp2
 #           volume_size: "{{ private_volume_size }}"
 #           delete_on_termination: true
