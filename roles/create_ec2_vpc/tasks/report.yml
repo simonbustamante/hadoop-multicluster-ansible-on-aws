@@ -78,21 +78,32 @@
   ec2_instance_info:
     region: "{{ region }}"
     filters:
-      "tag:Role": oozie
+      "tag:Role": b2bdata
       instance-state-name: running
     aws_access_key: "{{ access_key }}"
     aws_secret_key: "{{ secret_key }}"
-  register: oozie_private_ec2_facts
+  register: b2bdata_private_ec2_facts
 
-- name: Facts private EC2 instance
-  ec2_instance_info:
-    region: "{{ region }}"
-    filters:
-      "tag:Role": hue
-      instance-state-name: running
-    aws_access_key: "{{ access_key }}"
-    aws_secret_key: "{{ secret_key }}"
-  register: hue_private_ec2_facts
+
+# - name: Facts private EC2 instance
+#   ec2_instance_info:
+#     region: "{{ region }}"
+#     filters:
+#       "tag:Role": oozie
+#       instance-state-name: running
+#     aws_access_key: "{{ access_key }}"
+#     aws_secret_key: "{{ secret_key }}"
+#   register: oozie_private_ec2_facts
+
+# - name: Facts private EC2 instance
+#   ec2_instance_info:
+#     region: "{{ region }}"
+#     filters:
+#       "tag:Role": hue
+#       instance-state-name: running
+#     aws_access_key: "{{ access_key }}"
+#     aws_secret_key: "{{ secret_key }}"
+#   register: hue_private_ec2_facts
 
 - name: Clean content inventories file
   shell: echo " " > "{{ path_hosts_group }}"/hosts
@@ -207,13 +218,13 @@
         - "{{ sqoop_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
         - "{{ sqoop_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
 
-- name: Write Oozie Servers
+- name: Write b2bdata Servers
   lineinfile:
     dest: "{{ path_hosts_group }}/hosts"
     insertafter: EOF
-    line: "[oozies]"
+    line: "[b2bdatas]"
 
-- name: Write Oozie Servers
+- name: Write b2bdata Servers
   lineinfile:
     dest: "{{ path_hosts_group }}/hosts"
     insertafter: EOF
@@ -221,25 +232,42 @@
     state: present
     create: yes
   with_together: 
-        - "{{ oozie_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
-        - "{{ oozie_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+        - "{{ b2bdata_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+        - "{{ b2bdata_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
 
-- name: Write Hue Servers
-  lineinfile:
-    dest: "{{ path_hosts_group }}/hosts"
-    insertafter: EOF
-    line: "[hues]"
+# - name: Write Oozie Servers
+#   lineinfile:
+#     dest: "{{ path_hosts_group }}/hosts"
+#     insertafter: EOF
+#     line: "[oozies]"
 
-- name: Write Hue Servers
-  lineinfile:
-    dest: "{{ path_hosts_group }}/hosts"
-    insertafter: EOF
-    line: "{{ item.0 }} ansible_ssh_host={{ item.1 }}"
-    state: present
-    create: yes
-  with_together: 
-        - "{{ hue_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
-        - "{{ hue_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+# - name: Write Oozie Servers
+#   lineinfile:
+#     dest: "{{ path_hosts_group }}/hosts"
+#     insertafter: EOF
+#     line: "{{ item.0 }} ansible_ssh_host={{ item.1 }}"
+#     state: present
+#     create: yes
+#   with_together: 
+#         - "{{ oozie_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+#         - "{{ oozie_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+
+# - name: Write Hue Servers
+#   lineinfile:
+#     dest: "{{ path_hosts_group }}/hosts"
+#     insertafter: EOF
+#     line: "[hues]"
+
+# - name: Write Hue Servers
+#   lineinfile:
+#     dest: "{{ path_hosts_group }}/hosts"
+#     insertafter: EOF
+#     line: "{{ item.0 }} ansible_ssh_host={{ item.1 }}"
+#     state: present
+#     create: yes
+#   with_together: 
+#         - "{{ hue_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+#         - "{{ hue_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
 
 
 # - name: Change ambari server IP
@@ -269,3 +297,46 @@
 
 - name: Write ssh common args
   shell: echo "ansible_ssh_common_args='{{ ansible_ssh_common_args }}'" >> "{{ path_hosts_group }}"/hosts  
+
+- name: Clean proxies
+  shell: echo "" > "{{ path_hosts_group }}"/proxies
+
+- name: generate hadoop proxy for master
+  lineinfile:
+    dest: "{{ path_hosts_group }}/proxies"
+    insertafter: EOF
+    line: "{{ item.0 }} ==>  ssh -i {{ private_key }} -L 9870:{{ item.1}}:9870 {{user}}@{{bastion_ip}}" 
+  with_together: 
+    - "{{ master_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+    - "{{ master_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+
+- name: generate hadoop proxy for datanodes
+  lineinfile:
+    dest: "{{ path_hosts_group }}/proxies"
+    insertafter: EOF
+    line: "{{ item.0 }} ==>  ssh -i {{ private_key }} -L 9864:{{ item.1}}:9864 {{user}}@{{bastion_ip}}" 
+  with_together: 
+    - "{{ datanode_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+    - "{{ datanode_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+
+- name: generate hadoop proxy for resource manager
+  lineinfile:
+    dest: "{{ path_hosts_group }}/proxies"
+    insertafter: EOF
+    line: "{{ item.0 }} ==>  ssh -i {{ private_key }} -L 8088:{{ item.1}}:8088 {{user}}@{{bastion_ip}}"
+    state: present
+    create: yes
+  with_together: 
+    - "{{ master_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+    - "{{ master_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+
+# - name: generate hadoop proxy for oozie
+#   lineinfile:
+#     dest: "{{ path_hosts_group }}/proxies"
+#     insertafter: EOF
+#     line: "{{ item.0 }} ==>  ssh -i {{ private_key }} -L 11000:{{ item.1}}:11000 {{user}}@{{bastion_ip}}"
+#     state: present
+#     create: yes
+#   with_together: 
+#     - "{{ oozie_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+#     - "{{ oozie_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 

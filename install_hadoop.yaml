@@ -34,14 +34,30 @@
 #   roles:
 #     - {role: sqoop}
 
-- hosts: oozies
+- hosts: b2bdatas
+  strategy: free
   remote_user: ubuntu
   roles:
-    - {role: oozie}
+    - {role: b2bdata}
 
-- hosts: hues
-  remote_user: ubuntu
-  roles:
-    - {role: hue}
+# - hosts: b2cdatabackends
+#   remote_user: ubuntu
+#   roles:
+#     - {role: b2cdatabackend}
+
+# - hosts: b2cdatafrontends
+#   remote_user: ubuntu
+#   roles:
+#     - {role: b2cdatafrontend}
+
+# - hosts: oozies
+#   remote_user: ubuntu
+#   roles:
+#     - {role: oozie}
+
+# - hosts: hues
+#   remote_user: ubuntu
+#   roles:
+#     - {role: hue}
 
 

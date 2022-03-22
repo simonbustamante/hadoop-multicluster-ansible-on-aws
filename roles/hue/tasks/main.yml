@@ -1,2 +1,108 @@
 ---
 # tasks file for roles/hue
+
+# - name: Configure mapred-site file
+#   become: true
+#   template:
+#     src: "mapred-site.xml.j2"
+#     dest: "/usr/local/hadoop/etc/hadoop/mapred-site.xml"
+
+# - name: Configure yarn-site file
+#   become: true
+#   template:
+#     src: "yarn-site.xml.j2"
+#     dest: "/usr/local/hadoop/etc/hadoop/yarn-site.xml"
+
+# - name: Configure core-site file
+#   become: true
+#   template:
+#     src: "core-site.xml.j2"
+#     dest: "/usr/local/hadoop/etc/hadoop/core-site.xml"
+
+# - name: adding hadoop
+#   lineinfile:
+#     dest: "~/.bashrc"
+#     insertafter: EOF
+#     state: present
+#     line:
+#       export HADOOP_HOME=/usr/local/hadoop
+
+# - name: adding python
+#   lineinfile:
+#     dest: "~/.bashrc"
+#     insertafter: EOF
+#     state: present
+#     line:
+#       export PYTHON_VER=python3.6.9
+
+# - name: source
+#   shell: source ~/.bashrc
+#   args:
+#     executable: /bin/bash
+
+# - name: Install ubuntu packeges
+#   become: true
+#   apt:
+#     pkg: 
+#     - git
+#     - python3.6-dev
+#     - python3-distutils 
+#     - ant
+#     - gcc
+#     - g++ 
+#     - libffi-dev 
+#     - libkrb5-dev 
+#     - libmysqlclient-dev 
+#     - libsasl2-dev 
+#     - libsasl2-modules-gssapi-mit 
+#     - libsqlite3-dev 
+#     - libssl-dev 
+#     - libxml2-dev 
+#     - libxslt-dev 
+#     - make 
+#     - maven 
+#     - libldap2-dev 
+#     - python-dev 
+#     - python-setuptools 
+#     - libgmp3-dev
+#     state: present
+
+# - name: install nodejs 1
+#   command: "wget https://deb.nodesource.com/setup_14.x"
+
+# - name: install nodejs 2
+#   become: true
+#   shell: "bash /home/ubuntu/setup_14.x"
+#   args:
+#     executable: /bin/bash
+
+# - name: Install nodejs 3
+#   become: true
+#   apt:
+#     pkg:
+#     - nodejs
+
+# - name: install nodejs 4
+#   become: true
+#   command: "npm install --global npm"
+
+# - name: gethue
+#   command: "git clone --branch {{huerelease}} https://github.com/cloudera/hue.git"
+
+# - name: Changing hue folder
+#   become: true
+#   command: "mv hue /usr/local/hue"
+
+# - name: Changing owner to hue folder
+#   become: true
+#   command: "chown {{user}}:{{user}} -R /usr/local/hue"
+
+# - name: make hue
+#   command: "chdir=/usr/local/hue make apps"
+
+- name: run hue
+  shell: "bash /usr/local/hue/build/env/bin/hue runserver"
+  args:
+    executable: /bin/bash
+
+ 

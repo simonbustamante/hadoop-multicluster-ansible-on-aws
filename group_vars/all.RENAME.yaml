@@ -1,12 +1,11 @@
 ---
-#========== AWS Setting (aws image - original is Centos7 but is not available on amazon) 
+#========== AWS Setting (aws image) 
 region: us-east-2
-vpc_name: myvpc
-key_name: mykeypair
+vpc_name: bustamante
+key_name: govsol-2021
 #ubuntu 18.04 ami-03a0c45ebc70f98ea
-#ubuntu 20.04 ami-0fb653ca2d3203ac1
-#amazon ami-059e474a5b37e133b
 image_name: ami-03a0c45ebc70f98ea
+#huerelease: release-4.10.0
 cleanup_cloud: true
 dns_zone: ansible.local
 ttl: 60
@@ -30,8 +29,9 @@ number_hives: 1
 number_pigs: 1
 number_sparks: 1
 number_sqoops: 1
-number_oozies: 1
-number_hues: 1
+number_b2bdatas: 1
+# number_oozies: 1
+# number_hues: 1
 number_masters_az_1: 1
 number_masters_az_2: 0
 number_datanodes_az_1: 2
@@ -44,37 +44,23 @@ number_sparks_az_1: 1
 number_sparks_az_2: 0
 number_sqoops_az_1: 1
 number_sqoops_az_2: 0
-number_oozies_az_1: 1
-number_oozies_az_2: 0
-number_hues_az_1: 1
-number_hues_az_2: 0
+number_b2bdatas_az_1: 1
+number_b2bdatas_az_2: 0
+# number_oozies_az_1: 1
+# number_oozies_az_2: 0
+# number_hues_az_1: 1
+# number_hues_az_2: 0
 
 path_hosts_group: inventories/staging
-private_key: /home/user/mykeypair.pem 
+private_key: /home/sabb/govsol-2021.pem 
 # Must be absolute path to your private key
 
-#========= Ambari Setting
-#remote_user: ec2-user
 
-# var_java_ver: 8u131
-# var_java_build: b11
-
-# var_ambari_server: 172.30.128.156
-# var_ambari_user: admin
-# var_ambari_password: admin
-
-# The Ambari version you want to deploy 
-#var_ambari_version: http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.6.2.2/ambari.repo 
-# var_ambari_version: https://archive.apache.org/dist/ambari/ambari-2.7.1/
-#https://docs.hortonworks.com/
-
-# mysql_connector_java_archive: mysql-connector-java-5.1.47.tar.gz
-# mysql_connector_java_url: https://dev.mysql.com/get/Downloads/Connector-J/{{ mysql_connector_java_archive }}
 #========== Bastion host
-bastion_ip: 3.16.61.175
+bastion_ip: 3.139.246.225
 user: ubuntu
 ansible_ssh_common_args: '-o ProxyCommand="ssh -i {{ private_key }} -W %h:%p -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no {{ user }}@{{ bastion_ip }}"'
-mysql_root_password: securepassword1234!
+mysql_root_password: root
 
 hadoop_folder: '/usr/local/hadoop/data'
-internal_public_key_hadoop: 'ssh-rsa AAAAB3NzaC1yc2EA .....internal hadoop ssh public key... Ru6Qm55b9ifBPnXc1ME'
+internal_public_key_hadoop: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDav7rluOgQezG45loKoNkx9S0iaT+5EmdPvxu+ir2+E065wds7TRp3Xd1k7mk4C8E1P/la3t/renAV8sBdyYC4OT1x/d7pEjjudzFAKD4XdVPsQ8n3z2IxzHLoaXoBjnKHM4Kc28l/KQY3cTSlr/DdeRg82CruodegIFHsefMiPjU1TclinO5w6OvvdcwsQVxe3yGfWarQq/eKTDLw/RLx2pPCxyrRijs7xGXNU1BEWtyAUdc6poqhc3nxh9rNmoroUaMWU90oGmbYUiAC8krirL2t7bHwVprAhgdOXtBBIQVKHZastneDksKzA4Mx0UANHa3SYP6+zxqpv/tFc4TDhnWMQYUdzjPsuK0LtUfMQw1Pw+cB7y8VDixslPy701aGQ0mXhG8fVdymCko3GJErx7xwSp8v1ngdYlViXQRUNOlLGhi8ALvRmSCEJ69BLXOAzfWsk/UdAfhbUg+XBskRFhL+aDn9NAqw5WdSGGjwnRu6Qm55b9ifBPnXc1ME/Es='

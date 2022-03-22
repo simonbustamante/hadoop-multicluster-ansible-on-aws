@@ -1,0 +1,5 @@
+
+master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9870:172.30.128.213:9870 ubuntu@3.16.247.98
+datanode1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.90:9864 ubuntu@3.16.247.98
+datanode2.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.152:9864 ubuntu@3.16.247.98
+master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 8088:172.30.128.213:8088 ubuntu@3.16.247.98
