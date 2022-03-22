@@ -396,6 +396,17 @@
     - "{{ sqoop_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
     - "{{ sqoop_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}"
 
+- name: ssh commands to b2bdata host
+  lineinfile:
+    dest: "{{ path_hosts_group }}/proxies"
+    insertafter: EOF
+    line: "{{ item.0 }} ==>  ssh {{user}}@{{item.1}}"
+    state: present
+    create: yes
+  with_together: 
+    - "{{ b2bdata_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+    - "{{ b2bdata_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}"
+
 # - name: generate hadoop proxy for oozie
 #   lineinfile:
 #     dest: "{{ path_hosts_group }}/proxies"

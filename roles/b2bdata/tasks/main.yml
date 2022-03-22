@@ -117,14 +117,18 @@
 - name: installing app 1
   command: chdir=/home/ubuntu/farmerRegistration composer install
 
-- name: installing app 2
-  become: true
-  command: chdir=/home/ubuntu/farmerRegistration docker-compose up -d
+# - name: installing app 2
+#   become: true
+#   command: chdir=/home/ubuntu/farmerRegistration docker-compose up -d
 
-- name: installing app 3
-  become: true
-  command: chdir=/home/ubuntu/farmerRegistration symfony console doctrine:migrations:migrate -n
+# - name: installing app 3
+#   become: true
+#   command: chdir=/home/ubuntu/farmerRegistration symfony server:start -d
 
-- name: installing app 4
-  become: true
-  command: chdir=/home/ubuntu/farmerRegistration symfony console doctrine:fixtures:load -n
+# - name: installing app 4
+#   become: true
+#   command: chdir=/home/ubuntu/farmerRegistration symfony console doctrine:migrations:migrate -n
+
+# - name: installing app 5
+#   become: true
+#   command: chdir=/home/ubuntu/farmerRegistration symfony console doctrine:fixtures:load -n
