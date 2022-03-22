@@ -821,7 +821,7 @@
       key_name: "{{ key_name }}"
       region: "{{ region }}"
       group_id: "{{ private_group.group_id }}"
-      instance_type: "{{ private_instance_type }}"
+      instance_type: "{{ private_instance_b2b_b2c }}"
       image: "{{ image_name }}"
       volumes:
         - device_name: /dev/xvda
@@ -851,7 +851,7 @@
       key_name: "{{ key_name }}"
       region: "{{ region }}"
       group_id: "{{ private_group.group_id }}"
-      instance_type: "{{ private_instance_type }}"
+      instance_type: "{{ private_instance_b2b_b2c }}"
       image: "{{ image_name }}"
       volumes:
         - device_name: /dev/xvda
@@ -879,7 +879,7 @@
       key_name: "{{ key_name }}"
       region: "{{ region }}"
       group_id: "{{ private_group.group_id }}"
-      instance_type: "{{ private_instance_type }}"
+      instance_type: "{{ private_instance_b2b_b2c }}"
       image: "{{ image_name }}"
       volumes:
         - device_name: /dev/xvda

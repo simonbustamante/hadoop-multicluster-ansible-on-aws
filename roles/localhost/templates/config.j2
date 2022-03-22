@@ -1,0 +1,14 @@
+Host {{ bastion_ip }}
+  HostName {{ bastion_ip }}
+  IdentityFile /home/sabb/govsol-2021.pem
+  User ubuntu
+
+{% for host in groups['all'] %}
+Host {{ hostvars[host]['ansible_ssh_host'] }}
+  HostName {{ hostvars[host]['ansible_ssh_host'] }}
+  IdentityFile /home/sabb/govsol-2021.pem
+  User ubuntu
+  ProxyCommand ssh {{ bastion_ip }} -W %h:%p
+  
+{% endfor %}
+

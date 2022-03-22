@@ -1,0 +1,12 @@
+---
+#tasks file for roles/localhost
+- name: Installing boto & boto3 on local system
+  pip:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ python_pkgs }}"
+
+- name: Configure .ssh proxies on localhost
+  template:
+    src: "config.j2"
+    dest: "~/.ssh/config"

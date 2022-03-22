@@ -1,0 +1,8 @@
+---
+- hosts: b2bdatas
+  strategy: free
+  remote_user: ubuntu
+  roles:
+    - {role: b2bdata}
+
+

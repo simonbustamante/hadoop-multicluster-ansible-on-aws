@@ -13,6 +13,7 @@ public_volume_size: 20
 private_volume_size: 20
 public_instance_type: t2.xlarge
 private_instance_type: t2.xlarge
+private_instance_b2b_b2c: t2.2xlarge
 cidr_block: 172.30.0.0/16
 cidr_pub_1: 172.30.16.0/20
 cidr_pub_2: 172.30.32.0/20
@@ -54,10 +55,12 @@ number_b2bdatas_az_2: 0
 path_hosts_group: inventories/staging
 private_key: /home/sabb/govsol-2021.pem 
 # Must be absolute path to your private key
-
+python_pkgs:
+        - boto
+        - boto3
 
 #========== Bastion host
-bastion_ip: 3.139.246.225
+bastion_ip: 3.14.187.224
 user: ubuntu
 ansible_ssh_common_args: '-o ProxyCommand="ssh -i {{ private_key }} -W %h:%p -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no {{ user }}@{{ bastion_ip }}"'
 mysql_root_password: root

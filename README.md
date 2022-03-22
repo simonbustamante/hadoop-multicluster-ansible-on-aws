@@ -73,10 +73,17 @@ Run:
 export ANSIBLE_HOST_KEY_CHECKING=False
 ```
 
-### b. Deploy Hadoop
+### b. Deploy Hadoop, B2B Data (optional), B2C Data (optional)
 ```
 ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/hosts install_hadoop.yaml
 ```
+```
+ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/hosts install_b2b.yaml
+```
+```
+ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/hosts install_b2c.yaml
+```
+
 
 ### Proxy to monitor cluster by web
 
@@ -103,8 +110,9 @@ then check in your browser `localhost:11000/oozie`
 ```
 oozie admin -oozie http://localhost:11000/oozie -status
 ```
-
-
+```
+NOTE: Check "inventories/staging/proxies" for more details and Check your local ssh config "~/.ssh/config" 
+```
 ### c. Stop Cluster
 
 To stop instances (UNDER CONSTRUCTION):

@@ -1,5 +1,12 @@
 
-master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9870:172.30.128.213:9870 ubuntu@3.16.247.98
-datanode1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.90:9864 ubuntu@3.16.247.98
-datanode2.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.152:9864 ubuntu@3.16.247.98
-master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 8088:172.30.128.213:8088 ubuntu@3.16.247.98
+master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9870:172.30.128.147:9870 ubuntu@3.14.187.224
+datanode1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.59:9864 ubuntu@3.14.187.224
+datanode2.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.185:9864 ubuntu@3.14.187.224
+master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 8088:172.30.128.147:8088 ubuntu@3.14.187.224
+master1.ansible.local ==>  ssh ubuntu@172.30.128.147
+datanode1.ansible.local ==>  ssh ubuntu@172.30.128.59
+datanode2.ansible.local ==>  ssh ubuntu@172.30.128.185
+hive1.ansible.local ==>  ssh ubuntu@172.30.128.108
+pig1.ansible.local ==>  ssh ubuntu@172.30.128.149
+spark1.ansible.local ==>  ssh ubuntu@172.30.128.76
+sqoop1.ansible.local ==>  ssh ubuntu@172.30.128.11

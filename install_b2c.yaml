@@ -1,0 +1,16 @@
+---
+- hosts: b2cdatas
+  strategy: free
+  remote_user: ubuntu
+  roles:
+    - {role: b2cdata}
+
+- hosts: b2cdatabackends
+  remote_user: ubuntu
+  roles:
+    - {role: b2cdatabackend}
+
+- hosts: b2cdatafrontends
+  remote_user: ubuntu
+  roles:
+    - {role: b2cdatafrontend}
