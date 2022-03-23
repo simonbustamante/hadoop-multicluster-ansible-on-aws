@@ -84,6 +84,16 @@
     aws_secret_key: "{{ secret_key }}"
   register: b2bdata_private_ec2_facts
 
+- name: Facts private EC2 instance
+  ec2_instance_info:
+    region: "{{ region }}"
+    filters:
+      "tag:Role": b2cdata
+      instance-state-name: running
+    aws_access_key: "{{ access_key }}"
+    aws_secret_key: "{{ secret_key }}"
+  register: b2cdata_private_ec2_facts
+
 
 # - name: Facts private EC2 instance
 #   ec2_instance_info:
@@ -235,6 +245,23 @@
         - "{{ b2bdata_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
         - "{{ b2bdata_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
 
+- name: Write b2cdata Servers
+  lineinfile:
+    dest: "{{ path_hosts_group }}/hosts"
+    insertafter: EOF
+    line: "[b2cdatas]"
+
+- name: Write b2cdata Servers
+  lineinfile:
+    dest: "{{ path_hosts_group }}/hosts"
+    insertafter: EOF
+    line: "{{ item.0 }} ansible_ssh_host={{ item.1 }}"
+    state: present
+    create: yes
+  with_together: 
+        - "{{ b2cdata_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+        - "{{ b2cdata_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+
 # - name: Write Oozie Servers
 #   lineinfile:
 #     dest: "{{ path_hosts_group }}/hosts"
@@ -330,6 +357,17 @@
     - "{{ master_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
     - "{{ master_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
 
+- name: generate b2cdata for prestashop
+  lineinfile:
+    dest: "{{ path_hosts_group }}/proxies"
+    insertafter: EOF
+    line: "{{ item.0 }} ==>  ssh -i {{ private_key }} -L 80:{{ item.1}}:80 {{user}}@{{bastion_ip}}"
+    state: present
+    create: yes
+  with_together: 
+    - "{{ b2cdata_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+    - "{{ b2cdata_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}" 
+
 - name: ssh commands to master host
   lineinfile:
     dest: "{{ path_hosts_group }}/proxies"
@@ -406,6 +444,17 @@
   with_together: 
     - "{{ b2bdata_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
     - "{{ b2bdata_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}"
+
+- name: ssh commands to b2cdata host
+  lineinfile:
+    dest: "{{ path_hosts_group }}/proxies"
+    insertafter: EOF
+    line: "{{ item.0 }} ==>  ssh {{user}}@{{item.1}}"
+    state: present
+    create: yes
+  with_together: 
+    - "{{ b2cdata_private_ec2_facts.instances|map(attribute='tags.Host')|list }}"
+    - "{{ b2cdata_private_ec2_facts.instances|map(attribute='private_ip_address')|list }}"
 
 # - name: generate hadoop proxy for oozie
 #   lineinfile:

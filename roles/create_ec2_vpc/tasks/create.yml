@@ -900,7 +900,95 @@
     register: b2bdata_private_instances_2
     when: mutiAZ == "yes"
 
+######### Private Instance for b2cdata ==================
 
+########### Private instance without AZ 
+
+  - name: Setup private instances without AZ 
+    ec2:
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      key_name: "{{ key_name }}"
+      region: "{{ region }}"
+      group_id: "{{ private_group.group_id }}"
+      instance_type: "{{ private_instance_b2b_b2c }}"
+      image: "{{ image_name }}"
+      volumes:
+        - device_name: /dev/sda1
+          volume_type: gp2
+          volume_size: "{{ private_volume_size }}"
+          delete_on_termination: true
+          snapshot: no
+      exact_count: 1
+      count_tag:
+        Host: "b2cdata{{ item }}.{{ dns_zone }}"
+      instance_tags:
+        Name: "b2cdata{{ item }}.{{ dns_zone }}"
+        Host: "b2cdata{{ item }}.{{ dns_zone }}"
+        Scope: private
+        Role: b2cdata
+      vpc_subnet_id: "{{ private_network_1.subnet.id }}"
+    with_sequence: count={{ number_b2cdatas }}
+    register: b2cdata_private_instances_1
+    when: mutiAZ == "no"
+
+############ Private instance with AZ 
+
+  - name: Setup private instances with AZ_1
+    ec2:
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      key_name: "{{ key_name }}"
+      region: "{{ region }}"
+      group_id: "{{ private_group.group_id }}"
+      instance_type: "{{ private_instance_b2b_b2c }}"
+      image: "{{ image_name }}"
+      volumes:
+        - device_name: /dev/sda1
+          volume_type: gp2
+          volume_size: "{{ private_volume_size }}"
+          delete_on_termination: true
+          snapshot: no
+      exact_count: 1
+      count_tag:
+        Host: "{{az_1}}-b2cdata{{ item }}.{{ dns_zone }}"
+      instance_tags:
+        Name: "{{az_1}}-b2cdata{{ item }}.{{ dns_zone }}"
+        Host: "{{az_1}}-b2cdata{{ item }}.{{ dns_zone }}"
+        Scope: private
+        Role: b2cdata
+      vpc_subnet_id: "{{ private_network_1.subnet.id }}"
+    with_sequence: count={{ number_b2cdatas_az_1 }}
+    register: b2cdata_private_instances_1
+    when: mutiAZ == "yes"
+
+  - name: Setup private instances with AZ_2
+    ec2:
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      key_name: "{{ key_name }}"
+      region: "{{ region }}"
+      group_id: "{{ private_group.group_id }}"
+      instance_type: "{{ private_instance_b2b_b2c }}"
+      image: "{{ image_name }}"
+      volumes:
+        - device_name: /dev/sda1
+          volume_type: gp2
+          volume_size: "{{ private_volume_size }}"
+          delete_on_termination: true
+          snapshot: no
+      exact_count: 1
+      count_tag:
+        Host: "{{az_2}}-b2cdata{{ item }}.{{ dns_zone }}"
+      instance_tags:
+        Name: "{{az_2}}-b2cdata{{ item }}.{{ dns_zone }}"
+        Host: "{{az_2}}-b2cdata{{ item }}.{{ dns_zone }}"
+        Scope: private
+        Role: b2cdata
+      vpc_subnet_id: "{{ private_network_2.subnet.id }}"
+    with_sequence: count={{ number_b2cdatas_az_2 }}
+    register: b2cdata_private_instances_2
+    when: mutiAZ == "yes"
 
 #     ######### Private Instance for Oozie ==================
 

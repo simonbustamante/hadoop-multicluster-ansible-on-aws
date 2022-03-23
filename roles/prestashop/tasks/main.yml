@@ -1,5 +1,5 @@
 ---
-# tasks file for b2bdata
+# tasks file for roles/b2cdata
 - name: Install aptitude using apt
   become: true
   apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
@@ -60,6 +60,7 @@
       - php-pear 
       - php-bcmath 
       - openssl
+      - unzip
     state: latest
     update_cache: true
 
@@ -80,33 +81,6 @@
   become: true
   command: mv composer.phar /usr/bin/composer
 
-- name: source list symfony
-  become: true
-  command: touch /etc/apt/sources.list.d/symfony-cli.list
-
-- name: installing symfony 1
-  become: true
-  lineinfile:
-    dest: "/etc/apt/sources.list.d/symfony-cli.list"
-    insertafter: EOF
-    state: present
-    line: "deb [trusted=yes] https://repo.symfony.com/apt/ /"
-
-- name: installing symfony 2
-  become: true
-  command: sudo apt-get update -y
-
-- name: installing symfony 3
-  become: true
-  command: apt-get install symfony-cli
-
-- name: installing symfony 4
-  command: symfony server:ca:install
-
-- name: installing symfony 5
-  command: git clone https://github.com/simonbustamante/farmerRegistration.git
-
-
 - name: docker compose install 1
   become: true
   get_url:
@@ -114,21 +88,77 @@
     dest: /usr/local/bin/docker-compose
     mode: 'u+x,g+x'
 
-- name: installing libraries
-  command: chdir=/home/ubuntu/farmerRegistration composer install
+- name: installing prestashop 1
+  command: git clone https://github.com/simonbustamante/nginx-prestashop.git
 
-- name: docker compose stack
+- name: check if db exist
+  stat:
+    path: /home/ubuntu/nginex-prestashop/db
+  register: db
+
+- name: check if prestashop exist
+  stat:
+    path: /home/ubuntu/nginex-prestashop/prestashop
+  register: prestashop
+
+- name: check if prestashop.sql exist
+  stat:
+    path: /home/ubuntu/nginex-prestashop/prestashop.sql
+  register: sql
+
+- name: check if node_module exist
+  stat:
+    path: /home/ubuntu/nginex-prestashop/node_modules
+  register: nodemodules
+
+- name: borrando db 
   become: true
-  command: chdir=/home/ubuntu/farmerRegistration docker-compose up -d
+  command: /home/ubuntu/nginx-prestashop/db
+  when: db.stat.exists
 
-- name: sysmfony server start
+- name: borrando prestashop 
   become: true
-  command: chdir=/home/ubuntu/farmerRegistration symfony server:start -d
+  command: /home/ubuntu/nginx-prestashop/prestashop
+  when: prestashop.stat.exists
 
-- name: symfony migration (you should connect manually and run the fixtures as b2bdata role comment)
+- name: borrando sql
   become: true
-  command: chdir=/home/ubuntu/farmerRegistration symfony console doctrine:migrations:migrate -n
+  command: /home/ubuntu/nginx-prestashop/prestashop.sql
+  when: sql.stat.exists
 
-# - name: installing app 5
-#   become: true
-#   command: chdir=/home/ubuntu/farmerRegistration symfony console doctrine:fixtures:load -n
+- name: borrando node_modules 
+  become: true
+  command: /home/ubuntu/nginx-prestashop/node_modules
+  when: nodemodules.stat.exists
+
+- name: descargando prestashop
+  command: chdir=/home/ubuntu/nginx-prestashop wget https://www.prestashop.com/download/old/prestashop_1.7.8.3.zip
+
+- name: Descomprimiendo archivo
+  command: chdir=/home/ubuntu/nginx-prestashop unzip prestashop_1.7.8.3.zip
+
+- name: Instalando prestashop 1
+  command: chdir=/home/ubuntu/nginx-prestashop mkdir prestashop
+
+- name: Instalando prestashop 2
+  command: chdir=/home/ubuntu/nginx-prestashop mv prestashop.zip prestashop
+
+- name: Instalando prestashop 3
+  command: chdir=/home/ubuntu/nginx-prestashop mv index.php prestashop
+
+- name: Instalando prestashop 4
+  command: chdir=/home/ubuntu/nginx-prestashop unzip -o prestashop/prestashop.zip -d prestashop/
+
+- name: Instalando prestashop 5
+  become: true
+  command: chdir=/home/ubuntu/nginx-prestashop chown -R www-data:www-data prestashop/
+
+- name: Instalando prestashop 6
+  command: chdir=/home/ubuntu/nginx-prestashop rm prestashop_1.7.8.3.zip Install_PrestaShop.html
+
+- name: Instalando prestashop 7
+  become: true
+  command: chdir=/home/ubuntu/nginx-prestashop docker-compose up -d --no-deps --build
+
+
+

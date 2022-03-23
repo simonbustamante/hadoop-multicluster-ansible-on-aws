@@ -1,0 +1,17 @@
+{ 
+    "ip": "localhost",
+    {% for host in groups['b2cdatas'] %}
+    "ipdb": "{{ hostvars[host]['ansible_ssh_host'] }}",
+    {% endfor %}
+    "port":"{{ ps_local_port }}",
+    "dbname": "prestashop",
+    "dbuser": "root",
+    "dbpassword": "mysql-root-pwd",
+    "demoname": "demo",
+    "shoppurpose": "foo",
+    "firstname": "admin",
+    "surname": "admin",
+    "email": "admin@admin.com",
+    "password": "abcd1234",
+    "dbprefix": "ps_"
+}

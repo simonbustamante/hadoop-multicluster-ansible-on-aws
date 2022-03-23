@@ -1,0 +1,60 @@
+---
+# tasks file for roles/prestashop-ui
+- name: apt refresh
+  become: true
+  command: apt-get update
+
+- name: Install required system packages
+  become: true
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: ['ca-certificates', 'curl', 'dirmngr', 'apt-transport-https', 'lsb-release']
+
+- name: download node 12
+  command: wget -c https://deb.nodesource.com/setup_12.x 
+  
+- name: install node 12
+  become: true
+  command: bash setup_12.x
+
+- name: Install nodejs
+  become: true
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: ['nodejs', 'gcc', 'g++', 'make']
+
+
+- name: cloning prestashop code locally
+  command: git clone https://github.com/simonbustamante/nginx-prestashop.git
+
+- name: check if working folder exist
+  stat:
+    path: "{{localhost_working_folder}}"
+  register: workingfolder
+
+- name: npm
+  command: chdir="{{localhost_working_folder}}" npm install
+  when: workingfolder.stat.exists
+
+- name: Configure server IP for db and browser
+  template:
+    src: "configuration-data.json.j2"
+    dest: "{{localhost_working_folder}}/configuration-data.json"
+
+- name: Facts b2cdata instance
+  ec2_instance_info:
+    region: "{{ region }}"
+    filters:
+      "tag:Role": b2cdata
+      instance-state-name: running
+    aws_access_key: "{{ access_key }}"
+    aws_secret_key: "{{ secret_key }}"
+  register: b2cdata_private_ec2_facts
+
+- name: Create SSH tunnel - be sure that your local port "{{ps_local_port}}" is available
+  shell: ssh -fN -i {{ private_key }} -L {{ps_local_port}}:{{ b2cdata_private_ec2_facts.instances|map(attribute='private_ip_address') }}:80 {{ bastion_ip }}
+
+- name: run graphic installation
+  command: chdir="{{localhost_working_folder}}" node instalacion-grafica.js
+
+- name: "Killing ssh process"
+  become: true
+  shell: pkill ssh

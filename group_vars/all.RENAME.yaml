@@ -31,6 +31,7 @@ number_pigs: 1
 number_sparks: 1
 number_sqoops: 1
 number_b2bdatas: 1
+number_b2cdatas: 1
 # number_oozies: 1
 # number_hues: 1
 number_masters_az_1: 1
@@ -47,6 +48,8 @@ number_sqoops_az_1: 1
 number_sqoops_az_2: 0
 number_b2bdatas_az_1: 1
 number_b2bdatas_az_2: 0
+number_b2cdatas_az_1: 1
+number_b2cdatas_az_2: 0
 # number_oozies_az_1: 1
 # number_oozies_az_2: 0
 # number_hues_az_1: 1
@@ -60,10 +63,13 @@ python_pkgs:
         - boto3
 
 #========== Bastion host
-bastion_ip: 3.14.187.224
+bastion_ip: 3.137.111.193
 user: ubuntu
 ansible_ssh_common_args: '-o ProxyCommand="ssh -i {{ private_key }} -W %h:%p -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no {{ user }}@{{ bastion_ip }}"'
 mysql_root_password: root
 
+localhost_working_folder: '/home/<YOUR HOME USER FOLDER>/hadoop-multicluster-ansible-on-aws/nginx-prestashop'
+ps_local_port: '8899'
 hadoop_folder: '/usr/local/hadoop/data'
-internal_public_key_hadoop: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDav7rluOgQezG45loKoNkx9S0iaT+5EmdPvxu+ir2+E065wds7TRp3Xd1k7mk4C8E1P/la3t/renAV8sBdyYC4OT1x/d7pEjjudzFAKD4XdVPsQ8n3z2IxzHLoaXoBjnKHM4Kc28l/KQY3cTSlr/DdeRg82CruodegIFHsefMiPjU1TclinO5w6OvvdcwsQVxe3yGfWarQq/eKTDLw/RLx2pPCxyrRijs7xGXNU1BEWtyAUdc6poqhc3nxh9rNmoroUaMWU90oGmbYUiAC8krirL2t7bHwVprAhgdOXtBBIQVKHZastneDksKzA4Mx0UANHa3SYP6+zxqpv/tFc4TDhnWMQYUdzjPsuK0LtUfMQw1Pw+cB7y8VDixslPy701aGQ0mXhG8fVdymCko3GJErx7xwSp8v1ngdYlViXQRUNOlLGhi8ALvRmSCEJ69BLXOAzfWsk/UdAfhbUg+XBskRFhL+aDn9NAqw5WdSGGjwnRu6Qm55b9ifBPnXc1ME/Es='
+
+internal_public_key_hadoop: 'ssh-rsa AAAAB3NzaC................Dn9NAqw5WdSGGjwnRu6Qm55b9ifBPnXc1ME/Es='
