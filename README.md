@@ -78,10 +78,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/hosts install_hadoop.yaml
 ```
 ```
-ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/hosts install_b2b.yaml
-```
-```
-ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/hosts install_b2c.yaml
+ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/hosts install_datasource.yaml --ask-vault-pass
 ```
 
 

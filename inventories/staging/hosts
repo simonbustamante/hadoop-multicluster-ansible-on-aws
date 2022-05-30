@@ -1,21 +1,21 @@
  
 [masternodes]
  
-master1.ansible.local ansible_ssh_host=172.30.128.238
+master1.ansible.local ansible_ssh_host=172.30.128.89
 [datanodes]
-datanode2.ansible.local ansible_ssh_host=172.30.128.165
-datanode1.ansible.local ansible_ssh_host=172.30.128.172
+datanode2.ansible.local ansible_ssh_host=172.30.128.26
+datanode1.ansible.local ansible_ssh_host=172.30.128.143
 [hives]
-hive1.ansible.local ansible_ssh_host=172.30.128.89
+hive1.ansible.local ansible_ssh_host=172.30.128.111
 [pigs]
-pig1.ansible.local ansible_ssh_host=172.30.128.27
+pig1.ansible.local ansible_ssh_host=172.30.128.205
 [sparks]
-spark1.ansible.local ansible_ssh_host=172.30.128.168
+spark1.ansible.local ansible_ssh_host=172.30.128.249
 [sqoops]
-sqoop1.ansible.local ansible_ssh_host=172.30.128.204
+sqoop1.ansible.local ansible_ssh_host=172.30.128.177
 [b2bdatas]
-b2bdata1.ansible.local ansible_ssh_host=172.30.128.137
+b2bdata1.ansible.local ansible_ssh_host=172.30.128.159
 [b2cdatas]
-b2cdata1.ansible.local ansible_ssh_host=172.30.128.206
+b2cdata1.ansible.local ansible_ssh_host=172.30.128.126
 [all:vars]
 ansible_ssh_common_args='-o ProxyCommand=ssh -i /home/sabb/govsol-2021.pem -W %h:%p -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ubuntu@3.134.214.39'
