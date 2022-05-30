@@ -1,15 +1,15 @@
 ---
-# - hosts: b2bdatas
-#   strategy: free
-#   remote_user: ubuntu
-#   roles:
-#     - {role: b2bdata}
+- hosts: b2bdatas
+  strategy: free
+  remote_user: ubuntu
+  roles:
+    - {role: b2bdata}
 
-# - hosts: b2cdatas
-#   strategy: free
-#   remote_user: ubuntu
-#   roles:
-#     - {role: prestashop}
+- hosts: b2cdatas
+  strategy: free
+  remote_user: ubuntu
+  roles:
+    - {role: prestashop}
 
 - hosts: localhost
   vars_files:

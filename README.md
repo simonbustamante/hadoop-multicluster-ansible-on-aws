@@ -1,37 +1,37 @@
-- This Ansible Playbook will help you create a `AWS EC2 Infrastructure` and setup `Hadoop Cluster` with open source versin avalaible on Apache Software Foundation
-- The AWS EC2 instances are in Ubuntu 18.04 
+- Este script de Ansible Playbook lo ayudará a crear un `AWS EC2 Infrastructure` y configurar un `Hadoop Cluster` con versión de código abierto disponible en Apache Software Foundation
+- Las instancias de AWS EC2 están en Ubuntu 20.04
 
-# 1. Create a AWS Infrastructure
+# 1. Crear una infraestructura de AWS
 
-This role setups the following:
+Este rol configura lo siguiente:
 
 * VPC
-* Two networks(private and public)
-* Create 1 public instance that will take as Bastion host, create 4 private instances for the cluster
-* Assign public IP for public instance
-* Adds internet gateway and NAT gateway to allow communication between networks and internet
-* General new hosts group to the `path_hosts_group`, the path to hosts group file must created
-* Allows to cleanup VPC and all created AWS resources
+* Dos redes (privada y pública)
+* Crea 1 instancia pública que tomará como host Bastion, crea 8 instancias privadas para el clúster
+* Asignaciónn de IP pública para instancia pública
+* Agrega puerta de enlace de Internet y puerta de enlace NAT para permitir la comunicación entre redes e Internet
+* General nuevo grupo de hosts a `path_hosts_group`, se debe crear la ruta al archivo de grupo de hosts
+* Permite limpiar VPC y todos los recursos de AWS creados
 
-### a. Require
+### a. Requerido
 
-- Create ssh keys pair and paste the content of the public key into `roles/create_ec2_vpc/files/aws.pub`
-- Set absolute path of your private key in `group_vars/all.yaml` at row `private_key` 
-- create a credential file `cred.yml` for aws access and secret key. Open `cred.yml.RENAME` and follow instrctions
-- Copy generated `privatekey` in `roles/common/files`
-- Set a `internal_public_key_hadoop` in `group_vars/all.yaml`  (this is the keypair of `privatekey` on before instruction) 
+- Cree un par de claves ssh y pegue el contenido de la clave pública en `roles/create_ec2_vpc/files/aws.pub`
+- Establezca la ruta absoluta de su clave privada en `group_vars/all.yaml` en fila `private_key` 
+- crear un archivo de credenciales `cred.yml` para acceso aws y clave secreta. Abra `cred.yml.RENAME` y siga las instrucciones
+- Copie la `private key` generada en `roles/common/files`
+- Establezca un `internal_public_key_hadoop` en `group_vars/all.yaml` (este es el par de claves de `privatekey` en la instrucción anterior)
 
 
-### b. Prepare
-##### Change the parameters match with your requirement!
+### b. Preparar
+##### ¡Cambie los parámetros  de acuerdo con los requerimientos!
 
-- Edit `group_vars/all.yaml` file
+- Edite el archivo `group_vars/all.yaml`
 
 ##### Choose the mode for your system: 
 
-Does EC2 instance need Avaibility Zone or NOT?
+¿La instancia EC2 necesita una zona de disponibilidad o NO?
 
-- Edit the file `create_hadoop_infrastructure.yml`
+- Edite el archivo `create_hadoop_infrastructure.yml`
 
 * Multi AZ: 
 ```
@@ -47,33 +47,33 @@ roles:
 ```
 
 
-### c. Run
-##### Create AWS VPC and Instances
+### c. Ejecutar
+##### Crear instancias y VPC de AWS
 
 ```
 sudo ansible-playbook create_hadoop_infrastructure.yml --tags="create" --ask-vault-pass
 ```
 
-##### Clean AWS VPC and Instances
+##### Limpiar instancias y VPC de AWS
 
 ```
 sudo ansible-playbook create_hadoop_infrastructure.yml --tags="clean" --ask-vault-pass
 ```
 
-# 2. Install hadoop cluster 
+# 2. instalar el clúster de hadoop
 
 
-### a. host checking false
+### a. Configuració de Ansible (host checking false)
 
 - Export `ANSIBLE_HOST_KEY_CHECKING`
 
-Run:
+Ejecutar:
 
 ```
 export ANSIBLE_HOST_KEY_CHECKING=False
 ```
 
-### b. Deploy Hadoop, B2B Data (optional), B2C Data (optional)
+### b. Implementar Hadoop, datos B2B (opcional), datos B2C (opcional)
 ```
 ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/hosts install_hadoop.yaml
 ```
@@ -85,7 +85,7 @@ ansible-playbook --key-file /home/user/mykeypair.pem -i inventories/staging/host
 ```
 
 
-### Proxy to monitor cluster by web
+### Ejemplos de proxy para monitorear clúster por web 
 
 #### namenode
 ```
@@ -111,9 +111,9 @@ then check in your browser `localhost:11000/oozie`
 oozie admin -oozie http://localhost:11000/oozie -status
 ```
 ```
-NOTE: Check "inventories/staging/proxies" for more details and Check your local ssh config "~/.ssh/config" 
+NOTE: Ver "inventories/staging/proxies" para obtener más detalles y verifique su configuración ssh local "~/.ssh/config" 
 ```
-### c. Stop Cluster
+### c. StopCluster
 
 To stop instances (UNDER CONSTRUCTION):
 

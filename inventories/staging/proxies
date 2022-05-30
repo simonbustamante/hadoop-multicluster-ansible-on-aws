@@ -1,15 +1,15 @@
 
-master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9870:172.30.128.190:9870 ubuntu@3.22.84.215
-datanode2.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.156:9864 ubuntu@3.22.84.215
-datanode1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.31:9864 ubuntu@3.22.84.215
-master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 8088:172.30.128.190:8088 ubuntu@3.22.84.215
-b2cdata1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 80:172.30.128.221:80 ubuntu@3.22.84.215
-master1.ansible.local ==>  ssh ubuntu@172.30.128.190
-datanode2.ansible.local ==>  ssh ubuntu@172.30.128.156
-datanode1.ansible.local ==>  ssh ubuntu@172.30.128.31
-hive1.ansible.local ==>  ssh ubuntu@172.30.128.17
-pig1.ansible.local ==>  ssh ubuntu@172.30.128.34
-spark1.ansible.local ==>  ssh ubuntu@172.30.128.140
-sqoop1.ansible.local ==>  ssh ubuntu@172.30.128.175
-b2bdata1.ansible.local ==>  ssh ubuntu@172.30.128.28
-b2cdata1.ansible.local ==>  ssh ubuntu@172.30.128.221
+master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9870:172.30.128.238:9870 ubuntu@3.134.214.39
+datanode2.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.165:9864 ubuntu@3.134.214.39
+datanode1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.172:9864 ubuntu@3.134.214.39
+master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 8088:172.30.128.238:8088 ubuntu@3.134.214.39
+b2cdata1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 80:172.30.128.206:80 ubuntu@3.134.214.39
+master1.ansible.local ==>  ssh ubuntu@172.30.128.238
+datanode2.ansible.local ==>  ssh ubuntu@172.30.128.165
+datanode1.ansible.local ==>  ssh ubuntu@172.30.128.172
+hive1.ansible.local ==>  ssh ubuntu@172.30.128.89
+pig1.ansible.local ==>  ssh ubuntu@172.30.128.27
+spark1.ansible.local ==>  ssh ubuntu@172.30.128.168
+sqoop1.ansible.local ==>  ssh ubuntu@172.30.128.204
+b2bdata1.ansible.local ==>  ssh ubuntu@172.30.128.137
+b2cdata1.ansible.local ==>  ssh ubuntu@172.30.128.206
