@@ -1,3 +1,7 @@
+/*************************************************************
+ Carga de archivos de base de datos B2B almacenados en HDFS  
+ **************************************************************/
+
 /* cargando actividades */ 
 activity = LOAD 'hdfs://master1.ansible.local:9000/b2b/activity/part-m-00000' USING PigStorage(',')
     AS (
@@ -192,7 +196,9 @@ product = LOAD 'hdfs://master1.ansible.local:9000/b2b/product/part-m-00000' USIN
         product_price_kg:chararray,
         prod_kg_month:chararray
     );
-
+/*************************************************************
+ proceso de desnormalización 
+ **************************************************************/
 /* join entre tabla de grupos */
 join_groups = JOIN groups BY id, farmer_group by groupid;
 /* join entre granjeros y grupos */
@@ -214,13 +220,7 @@ join_farmer_farm = JOIN join_farmer_group BY farmers::id,  join_farm BY farms::f
 /* --------------------- */
 /* uniendo granjeros, granjas, grupos, inventario, actividades y productos */
 join_whole_farmers = JOIN join_farmer_farm BY farms::farm_id, join_inventory_product_activity BY farm_inventory::farm_id;
-/* ordenando actualizaciones de inventario */
 
-
-/*inventory_update = ORDER inventory_update BY inventory_id;*/
-/* join farmer whole y updates */
-/*join_whole_farmers = JOIN join_whole_farmers BY farm_inventory::fi_id, inventory_update BY inventory_id;
-join_whole_farmers = ORDER join_whole_farmers BY farmers::id;*/
 
 /* ---------------------- */
 /* ---------------------- */
@@ -239,14 +239,6 @@ join_req_prod_inv = JOIN join_prod_inv
                         BY id;
 join_req_prod_inv = ORDER join_req_prod_inv BY mayani_product_inventory::id;
 /* ---------------------- */
-/* solicitudes de b2c a mayani */
-/* b2_cproduct_request = ORDER b2_cproduct_request BY mayani_inventory_id; */
-/*join_b2c = JOIN b2_cproduct_request 
-                BY mayani_inventory_id,
-            join_req_prod_inv
-                BY  mayani_product_inventory::id;
-join_b2c = ORDER join_b2c BY mayani_product_inventory::id;*/
-/* join con tabla pivote de solicitud de inventario e inventario de granjas */
 
 may_req_inv_farm_inv = ORDER mayani_request_inventory_farm_inventory BY mayani_request_inventory_id ASC;
 
@@ -270,11 +262,7 @@ join_loans_balance = JOIN join_loans
                         BY id;
 
 
-/*
-describe join_whole_farmers;
-describe join_mayani; 
-describe join_loans_balance;
-*/
+
 
 
 /* uniendo granjeros, granjas, balances y prestamos*/
@@ -287,13 +275,26 @@ join_whole_farmers_balance = JOIN join_whole_farmers BY farmers::id,
 
 join_whole_farmers_balance_mayani = JOIN join_whole_farmers_balance BY farm_inventory::fi_id, 
                                     join_mayani BY may_req_inv_farm_inv::farm_inventory_id;
-/*join_whole_farmers_balance_mayani = ORDER join_whole_farmers_balance_mayani BY farmers::id;
-join_whole_farmers_balance_mayani = LIMIT join_whole_farmers_balance_mayani 10000;*/
-
-
 
 
 /*Dump join_whole_farmers_balance_mayani;*/
 
-STORE join_lbp_farmers INTO '/join_whole_farmers_balance_mayani' USING PigStorage (',');
+/*************************************************************
+ tablas que no seran desnormalizadas  y formarán parte de las dimensiones
+ * loan_payment
+ * b2_cproduct_request
+ * inventory_update
+ * mayani_request_inventory_farmer_balance
+ **************************************************************/
+
+describe join_whole_farmers_balance_mayani;
+describe loan_payment; 
+describe b2_cproduct_request;
+describe inventory_update;
+describe mayani_request_inventory_farmer_balance;
+/*************************************************************
+ Almacenamiento de tabla desnormalizada en HDFS  
+ **************************************************************/
+
+STORE join_whole_farmers_balance_mayani INTO '/join_whole_farmers_balance_mayani' USING PigStorage (',');
 
