@@ -1,15 +1,15 @@
 
-master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9870:172.30.128.251:9870 ubuntu@18.220.16.88
-datanode1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.162:9864 ubuntu@18.220.16.88
-datanode2.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.36:9864 ubuntu@18.220.16.88
-master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 8088:172.30.128.251:8088 ubuntu@18.220.16.88
-b2cdata1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 80:172.30.128.38:80 ubuntu@18.220.16.88
-master1.ansible.local ==>  ssh ubuntu@172.30.128.251
-datanode1.ansible.local ==>  ssh ubuntu@172.30.128.162
-datanode2.ansible.local ==>  ssh ubuntu@172.30.128.36
-hive1.ansible.local ==>  ssh ubuntu@172.30.128.230
-pig1.ansible.local ==>  ssh ubuntu@172.30.128.8
-spark1.ansible.local ==>  ssh ubuntu@172.30.128.174
-sqoop1.ansible.local ==>  ssh ubuntu@172.30.128.159
-b2bdata1.ansible.local ==>  ssh ubuntu@172.30.128.84
-b2cdata1.ansible.local ==>  ssh ubuntu@172.30.128.38
+master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9870:172.30.128.169:9870 ubuntu@18.216.96.221
+datanode2.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.248:9864 ubuntu@18.216.96.221
+datanode1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 9864:172.30.128.197:9864 ubuntu@18.216.96.221
+master1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 8088:172.30.128.169:8088 ubuntu@18.216.96.221
+b2cdata1.ansible.local ==>  ssh -i /home/sabb/govsol-2021.pem -L 80:172.30.128.86:80 ubuntu@18.216.96.221
+master1.ansible.local ==>  ssh ubuntu@172.30.128.169
+datanode2.ansible.local ==>  ssh ubuntu@172.30.128.248
+datanode1.ansible.local ==>  ssh ubuntu@172.30.128.197
+hive1.ansible.local ==>  ssh ubuntu@172.30.128.137
+pig1.ansible.local ==>  ssh ubuntu@172.30.128.229
+spark1.ansible.local ==>  ssh ubuntu@172.30.128.252
+sqoop1.ansible.local ==>  ssh ubuntu@172.30.128.87
+b2bdata1.ansible.local ==>  ssh ubuntu@172.30.128.102
+b2cdata1.ansible.local ==>  ssh ubuntu@172.30.128.86
