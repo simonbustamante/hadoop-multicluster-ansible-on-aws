@@ -141,10 +141,10 @@ order_history = LOAD 'hdfs://master1.ansible.local:9000/b2c/ps_order_history/par
 
 /* join de tablas de orders */
 filter_orders = FILTER orders BY id_lang =='1'; /* solo filtrado por idioma ingles */
-join_orders = JOIN filter_orders BY id_order, 
+join_whole_orders = JOIN filter_orders BY id_order, 
                 order_detail BY id_order, 
                 order_carrier BY id_order;
-Dump join_orders;
+/*Dump join_orders;*/
 
 
 /*************************************************************
