@@ -124,15 +124,6 @@ order_detail = LOAD 'hdfs://master1.ansible.local:9000/b2c/ps_order_detail/part-
         total_refunded_tax_incl:chararray
     );
 
-/* tabla de historia de la orden*/
-order_history = LOAD 'hdfs://master1.ansible.local:9000/b2c/ps_order_history/part-m-00000' USING PigStorage(',')
-    AS (
-        id_order_history:chararray,
-        id_employee:chararray,
-        id_order:chararray,
-        id_order_state:chararray,
-        date_add:chararray
-    );
 
 
 /*************************************************************
@@ -144,7 +135,8 @@ filter_orders = FILTER orders BY id_lang =='1'; /* solo filtrado por idioma ingl
 join_whole_orders = JOIN filter_orders BY id_order, 
                 order_detail BY id_order, 
                 order_carrier BY id_order;
-/*Dump join_orders;*/
+                
+describe join_whole_orders;
 
 
 /*************************************************************
