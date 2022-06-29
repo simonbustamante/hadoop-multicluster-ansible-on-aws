@@ -32,17 +32,17 @@ farms = LOAD 'hdfs://master1.ansible.local:9000/b2b/farm/part-m-00000' USING Pig
         farm_name: chararray
     );
 /* cargando actividades de granjas */ 
-farm_activity = LOAD 'hdfs://master1.ansible.local:9000/b2b/farm_activity/part-m-00000' USING PigStorage(',')
+/*farm_activity = LOAD 'hdfs://master1.ansible.local:9000/b2b/farm_activity/part-m-00000' USING PigStorage(',')
     AS (
         farm_id:chararray,
         activity_id:chararray
-    );
+    );*/
 /* cargando grupo de las granjas */
-farm_group =  LOAD 'hdfs://master1.ansible.local:9000/b2b/farm_group/part-m-00000' USING PigStorage(',')
+/*farm_group =  LOAD 'hdfs://master1.ansible.local:9000/b2b/farm_group/part-m-00000' USING PigStorage(',')
     AS (
         farm_id:chararray,
         group_id:chararray
-    );
+    );*/
 /* cargando inventario de granjas */   
 farm_inventory = LOAD 'hdfs://master1.ansible.local:9000/b2b/farm_inventory/part-m-00000' USING PigStorage(',')
     AS (
@@ -396,19 +396,6 @@ Tablas:
 /*********************************************************************************************/
 /*********************************************************************************************/
 
-/*************************************************************
- Almacenamiento de tabla desnormalizada en HDFS  
- **************************************************************/
-/*
-STORE join_whole_farmers INTO '/join_whole_farmers' USING PigStorage (',');
-*/
-
-
-/*********************************************************************************************/
-/*********************************************************************************************/
-/*********************************************************************************************/
-
-
 
 /*************************************************************
  CARGA DE ARCHIVOS DE BASE DE DATOS B2C ALMACENADOS EN HDFS  
@@ -663,7 +650,6 @@ join_whole_orders = FOREACH join_whole_orders GENERATE
 
 describe join_whole_orders;
 
-
     
 
 b2b_b2c = JOIN join_whole_farmers BY product_id, join_whole_orders BY product_id;
@@ -672,8 +658,29 @@ b2b_b2c = JOIN join_whole_farmers BY product_id, join_whole_orders BY product_id
 
 
 /*************************************************************
- Almacenamiento de tabla desnormalizada en HDFS  
+ Almacenamiento de tablas desnormalizadas en HDFS  
  **************************************************************/
+/*
+STORE b2b_b2c INTO '/b2b_b2c' USING PigStorage (',');
+STORE join_whole_mayani INTO '/mayani_internal_tasks' USING PigStorage (',');
+*/
 
-STORE join_whole_orders INTO '/b2b_b2c' USING PigStorage (',');
-    
+/* con esta opcion se guarda en la primera linea el nombre de los campos */
+
+STORE b2b_b2c INTO '/b2b_b2c' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE join_whole_mayani INTO '/mayani_internal_tasks' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+
+
+/*NO SERA NECESARIO DESNORMALIZAR LAS SIGUIENTES TABLAS YA QUE REPRESENTAN UNA DIMENSIÓN
+*************************************************************
+ tablas que no seran desnormalizadas de b2b  y formarán parte de las dimensiones
+ * loan_payment
+ * inventory_update
+ *************************************************************
+ Descartadas las tablas, no se tomarán en cuenta mas adelante, sicha información solo será tomada de 
+ la tabla de productos y de granjeros
+ * farm_activity 
+ * farm_group
+ 
+ */
+
