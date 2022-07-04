@@ -522,7 +522,14 @@ order_detail = LOAD 'hdfs://master1.ansible.local:9000/b2c/ps_order_detail/part-
         total_refunded_tax_excl:chararray,
         total_refunded_tax_incl:chararray
     );
-
+manufacturer = LOAD 'hdfs://master1.ansible.local:9000/b2c/ps_manufacturer/part-m-00000' USING PigStorage(',')
+            AS (
+                id: chararray,
+                manufacturer_name: chararray,
+                date1: chararray,
+                date2: chararray,
+                switch: chararray
+            );
 
 
 /*************************************************************
@@ -534,6 +541,8 @@ filter_orders = FILTER orders BY id_lang =='1'; /* solo filtrado por idioma ingl
 join_whole_orders = JOIN filter_orders BY id_order, 
                 order_detail BY id_order, 
                 order_carrier BY id_order;
+
+
 
 /*                
 describe join_whole_orders;
@@ -654,33 +663,270 @@ describe join_whole_orders;
 
 b2b_b2c = JOIN join_whole_farmers BY product_id, join_whole_orders BY product_id;
 
+
 /*Dump b2b_b2c;*/
 
 
+
+/*********************************************************************************************/
+/*********************************************************************************************/
+/*********************************************************************************************/
+
+
+/**********************************************************************************************
+ CONSTRUCION DE MODELO ESTRELLA CON PERFIL DE GRANJEROS COMO TABLA CENTRAL
+ **********************************************************************************************/
+
+/*describe b2b_b2c;*/
+
+ /* LA TABLA CENTRAL "farmer_profile" ESTARÁ FORMADA POR LOS IDENTIFICADORES PRINCIPALES DEL RESTO DE LAS RELACIONES */
+
+farmer_profile = FOREACH b2b_b2c GENERATE 
+                join_whole_farmers::farmer_id as farmer_id: chararray;
+farmer_profile = DISTINCT farmer_profile;
+
+
+/* Dimensión de información del granjero */
+farmer_information = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                join_whole_farmers::farmer_name as name: chararray,
+                join_whole_farmers::farmer_middle as middle: chararray,
+                join_whole_farmers::farmer_surname as surname: chararray,
+                join_whole_farmers::farmer_sex as sex: chararray,
+                join_whole_farmers::farmer_address as address: chararray,
+                join_whole_farmers::farmer_contact as contact: chararray,
+                join_whole_farmers::farmer_birthday as birthday: chararray,
+                join_whole_farmers::farmer_birthplace as birthplace: chararray,
+                join_whole_farmers::farmer_birthcontry as birthcontry: chararray,
+                join_whole_farmers::farmer_religion as religion: chararray,
+                join_whole_farmers::farmer_civilstatus as civilstatus: chararray,
+                join_whole_farmers::farmer_spouse as spouse: chararray,
+                join_whole_farmers::farmer_education as education: chararray,
+                join_whole_farmers::farmer_governmentid as governmentid: chararray;
+farmer_information = DISTINCT farmer_information;
+
+/* Dimensión de grupos o sindicatos a los que pertenece el granjero */
+farmer_groups = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                join_whole_farmers::groups_id as groups_id: chararray,
+                join_whole_farmers::groups_name as groups_name: chararray,
+                join_whole_farmers::groups_idnumber as groups_idnumber: chararray,
+                join_whole_farmers::groups_year as groups_year: chararray;
+farmer_groups = DISTINCT farmer_groups;
+
+/* Dimensión de granjas del granjero */
+farmer_farm = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                join_whole_farmers::farmid as farmid: chararray,
+                join_whole_farmers::farm_name as farm_name: chararray,
+                join_whole_farmers::farm_house as farm_house: chararray,
+                join_whole_farmers::farm_street as farm_street: chararray,
+                join_whole_farmers::farm_barangay as farm_barangay: chararray,
+                join_whole_farmers::farm_municipality as farm_municipality: chararray,
+                join_whole_farmers::farm_province as farm_province: chararray,
+                join_whole_farmers::farm_region as farm_region: chararray;
+farmer_farm = DISTINCT farmer_farm;
+
+/* Dimensión de productos del granjero */
+farmer_product = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                join_whole_farmers::inventory_id as inventory_id: chararray,
+                join_whole_farmers::product_id as product_id: chararray,
+                join_whole_farmers::inventory_date as inventory_date: chararray,
+                join_whole_farmers::inventory_total_credit as inventory_total_credit: chararray,
+                join_whole_farmers::inventory_total_kg as inventory_total_kg: chararray,
+                join_whole_farmers::inventory_description as inventory_description: chararray,
+                join_whole_farmers::product_name as product_name: chararray,
+                join_whole_farmers::price_per_kg as price_per_kg: chararray,
+                join_whole_farmers::kg_per_month as kg_per_month: chararray,
+                join_whole_farmers::activity_id as activity_id: chararray,
+                join_whole_farmers::activity_name as activity_name: chararray,
+                join_whole_farmers::activity_description as activity_description: chararray;
+farmer_product = DISTINCT farmer_product;
+
+/*Dimensión de prestamos realizados al granjero*/
+farmer_loan_details = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                join_whole_farmers::loan_id as loan_id: chararray,
+                join_whole_farmers::loan_debt as loan_debt: chararray,
+                join_whole_farmers::time_to_pay as time_to_pay: chararray,
+                join_whole_farmers::monthly_fee as monthly_fee: chararray,
+                join_whole_farmers::date_of_approval as date_of_approval: chararray,
+                join_whole_farmers::loan_status as loan_status: chararray,
+                join_whole_farmers::loan_description as loan_description: chararray,
+                join_whole_farmers::loan_type_id as loan_type_id: chararray,
+                join_whole_farmers::loan_type_name as loan_type_name: chararray,
+                join_whole_farmers::loan_type_description as loan_type_description: chararray,
+                join_whole_farmers::loan_interest as loan_interest: chararray;
+farmer_loan_details = DISTINCT farmer_loan_details;
+
+/* Dimensión del balance general del granjero */
+farmer_balances = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                join_whole_farmers::farmer_balance_id as balance_id: chararray,
+                join_whole_farmers::farmer_balance_debt as farmer_balance_debt: chararray,
+                join_whole_farmers::farmer_balance_credit as farmer_balance_credit: chararray,
+                join_whole_farmers::farmer_balance_monthly_fee as farmer_balance_monthly_fee: chararray,
+                join_whole_farmers::farmer_description as farmer_description: chararray;
+farmer_balances = DISTINCT farmer_balances;
+
+/* Dimensión de detalles de ventas realizadas del granjero */
+farmer_sell_details = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                join_whole_orders::id_order as id_order: chararray,
+                join_whole_orders::order_reference as order_reference: chararray,
+                join_whole_orders::product_id as product_id: chararray,
+                join_whole_orders::product_name as product_name: chararray,
+                join_whole_orders::product_quantity as product_quantity: chararray,
+                join_whole_orders::product_price as product_price: chararray,
+                join_whole_orders::product_quantity_in_stock as product_quantity_in_stock: chararray,
+                join_whole_orders::product_quantity_refunded as product_quantity_refunded: chararray,
+                join_whole_orders::product_quantity_return as product_quantity_return: chararray,
+                join_whole_orders::product_quantity_reinjected as product_quantity_reinjected: chararray,
+                join_whole_orders::product_quantity_discount as product_quantity_discount: chararray,
+                join_whole_orders::product_attribute_id as product_attribute_id: chararray,
+                join_whole_orders::product_ean13 as product_ean13: chararray,
+                join_whole_orders::product_isbn as product_isbn: chararray,
+                join_whole_orders::product_upc as product_upc: chararray,
+                join_whole_orders::product_mpn as product_mpn: chararray,
+                join_whole_orders::product_reference as product_reference: chararray,
+                join_whole_orders::product_supplier_reference as product_supplier_reference: chararray,
+                join_whole_orders::product_weight as product_weight: chararray,
+                join_whole_orders::total_discounts as total_discounts: chararray,
+                join_whole_orders::total_discounts_tax_incl as total_discounts_tax_incl: chararray,
+                join_whole_orders::total_discounts_tax_excl as total_discounts_tax_excl: chararray,
+                join_whole_orders::total_paid as total_paid: chararray,
+                join_whole_orders::total_paid_tax_incl as total_paid_tax_incl: chararray,
+                join_whole_orders::total_paid_tax_excl as total_paid_tax_excl: chararray,
+                join_whole_orders::total_paid_real as total_paid_real: chararray,
+                join_whole_orders::total_products as total_products: chararray,
+                join_whole_orders::total_products_wt as total_products_wt: chararray,
+                join_whole_orders::total_shipping as total_shipping: chararray,
+                join_whole_orders::total_price_tax_incl as total_price_tax_incl: chararray,
+                join_whole_orders::total_price_tax_excl as total_price_tax_excl: chararray,
+                join_whole_orders::total_refunded_tax_excl as total_refunded_tax_excl: chararray,
+                join_whole_orders::total_refunded_tax_incl as total_refunded_tax_incl: chararray,
+                join_whole_orders::total_shipping_price_tax_incl as total_shipping_price_tax_incl: chararray,
+                join_whole_orders::total_shipping_price_tax_excl as total_shipping_price_tax_excl: chararray,
+                join_whole_orders::shipping_cost_tax_excl as shipping_cost_tax_excl: chararray,
+                join_whole_orders::shipping_cost_tax_incl as shipping_cost_tax_incl: chararray,
+                join_whole_orders::id_customization as id_customization: chararray,
+                join_whole_orders::reduction_percent as reduction_percent: chararray,
+                join_whole_orders::reduction_amount as reduction_amount: chararray,
+                join_whole_orders::reduction_amount_tax_incl as reduction_amount_tax_incl: chararray,
+                join_whole_orders::reduction_amount_tax_excl as reduction_amount_tax_excl: chararray,
+                join_whole_orders::group_reduction as group_reduction: chararray,
+                join_whole_orders::id_shop_group as id_shop_group: chararray,
+                join_whole_orders::id_shop as id_shop: chararray,
+                join_whole_orders::id_carrier as id_carrier: chararray,
+                join_whole_orders::id_lang as id_lang: chararray,
+                join_whole_orders::id_customer as id_customer: chararray,
+                join_whole_orders::id_cart as id_cart: chararray,
+                join_whole_orders::id_currency as id_currency: chararray,
+                join_whole_orders::d_address_delivery as d_address_delivery: chararray,
+                join_whole_orders::id_address_invoice as id_address_invoice: chararray,
+                join_whole_orders::current_state as current_state: chararray,
+                join_whole_orders::payment as payment: chararray,
+                join_whole_orders::conversion_rate as conversion_rate: chararray,
+                join_whole_orders::module as module: chararray,
+                join_whole_orders::recyclable as recyclable: chararray,
+                join_whole_orders::gift as gift: chararray,
+                join_whole_orders::gift_message as gift_message: chararray,
+                join_whole_orders::mobile_theme as mobile_theme: chararray,
+                join_whole_orders::shipping_number as shipping_number: chararray,
+                join_whole_orders::carrier_tax_rate as carrier_tax_rate: chararray,
+                join_whole_orders::total_wrapping as total_wrapping: chararray,
+                join_whole_orders::total_wrapping_tax_incl as total_wrapping_tax_incl: chararray,
+                join_whole_orders::total_wrapping_tax_excl as total_wrapping_tax_excl: chararray,
+                join_whole_orders::round_mode as round_mode: chararray,
+                join_whole_orders::round_type as round_type: chararray,
+                join_whole_orders::invoice_number as invoice_number: chararray,
+                join_whole_orders::delivery_number as delivery_number: chararray,
+                join_whole_orders::invoice_date as invoice_date: chararray,
+                join_whole_orders::delivery_date as delivery_date: chararray,
+                join_whole_orders::valid as valid: chararray,
+                join_whole_orders::date_add as date_add: chararray,
+                join_whole_orders::date_upd as date_upd: chararray,
+                join_whole_orders::note as note: chararray,
+                join_whole_orders::id_order_detail as id_order_detail: chararray,
+                join_whole_orders::id_warehouse as id_warehouse: chararray,
+                join_whole_orders::id_tax_rules_group as id_tax_rules_group: chararray,
+                join_whole_orders::tax_computation_method as tax_computation_method: chararray,
+                join_whole_orders::tax_name as tax_name: chararray,
+                join_whole_orders::tax_rate as tax_rate: chararray,
+                join_whole_orders::ecotax as ecotax: chararray,
+                join_whole_orders::ecotax_tax_rate as ecotax_tax_rate: chararray,
+                join_whole_orders::discount_quantity_applied as discount_quantity_applied: chararray,
+                join_whole_orders::download_hash as download_hash: chararray,
+                join_whole_orders::download_nb as download_nb: chararray,
+                join_whole_orders::download_deadline as download_deadline: chararray,
+                join_whole_orders::unit_price_tax_incl as unit_price_tax_incl: chararray,
+                join_whole_orders::unit_price_tax_excl as unit_price_tax_excl: chararray,
+                join_whole_orders::purchase_supplier_price as purchase_supplier_price: chararray,
+                join_whole_orders::original_product_price as original_product_price: chararray,
+                join_whole_orders::original_wholesale_price as original_wholesale_price: chararray,
+                join_whole_orders::id_order_carrier as id_order_carrier: chararray,
+                join_whole_orders::weight as weight: chararray,
+                join_whole_orders::tracking_number as tracking_number: chararray;
+farmer_sell_details = DISTINCT farmer_sell_details;
+
+/* Dimensión de actualización del inventario de productos del granjero */
+/* se necesita hacer JOIN entre las actualizaciones de inventario 
+no fueron  agregadas inicialmente en la tabla desnormalizada principal */
+
+
+b2b_b2c = JOIN b2b_b2c BY join_whole_farmers::inventory_id, inventory_update BY inventory_id;
+dim_inventory_update = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                inventory_update::id as inventory_update_id: chararray,
+                inventory_update::inventory_id as inventory_id: chararray,
+                inventory_update::quantity_kg as quantity_kg: chararray,
+                inventory_update::credit as credit: chararray,
+                inventory_update::date as date: chararray;
+
+dim_inventory_update = DISTINCT dim_inventory_update;
+
+/* Dimensión de pagos realizados a prestamos del granjero */
+/* Se necesita hacer JOIN entre los pagos realizados a prestamos y la tabla desnormalizadas
+ya que no fueron agregadas inicialmente */
+
+b2b_b2c = JOIN b2b_b2c BY join_whole_farmers::farmer_balance_id, loan_payment BY farmer_balance_id;
+dim_loan_payment = FOREACH b2b_b2c GENERATE
+                join_whole_farmers::farmer_id as farmer_id: chararray,
+                loan_payment::id as loan_payment_id:chararray,
+                loan_payment::farmer_balance_id as farmer_balance_id:chararray,
+                loan_payment::loan_id as loan_id:chararray,
+                loan_payment::date as loan_date:chararray,
+                loan_payment::quantity_paid as loan_quantity_paid:chararray;
+dim_loan_payment = DISTINCT dim_loan_payment;
+dim_loan_payment = ORDER dim_loan_payment BY farmer_id;
+/*Dump dim_loan_payment;*/
+
+
+
 /*************************************************************
- Almacenamiento de tablas desnormalizadas en HDFS  
+ Almacenamiento de tablas desnormalizadas en HDFS  (OPCIONAL)
+ Solo se debe descomentar las líneas correspondientes a STORE
  **************************************************************/
-/*
-STORE b2b_b2c INTO '/b2b_b2c' USING PigStorage (',');
-STORE join_whole_mayani INTO '/mayani_internal_tasks' USING PigStorage (',');
-*/
 
 /* con esta opcion se guarda en la primera linea el nombre de los campos */
 
-STORE b2b_b2c INTO '/b2b_b2c' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE join_whole_mayani INTO '/mayani_internal_tasks' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE farmer_profile INTO '/star-model/farmer_profile' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE farmer_information INTO '/star-model/farmer_information' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE farmer_groups INTO '/star-model/farmer_groups' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE farmer_farm INTO '/star-model/farmer_farm' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE farmer_product INTO '/star-model/farmer_product' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE farmer_loan_details INTO '/star-model/farmer_loan_details' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE farmer_balances INTO '/star-model/farmer_balances' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE farmer_sell_details INTO '/star-model/farmer_sell_details' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+STORE dim_inventory_update INTO '/star-model/dim_inventory_update' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+/*STORE dim_loan_payment INTO '/star-model/dim_loan_payment' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
 
 
-/*NO SERA NECESARIO DESNORMALIZAR LAS SIGUIENTES TABLAS YA QUE REPRESENTAN UNA DIMENSIÓN
-*************************************************************
- tablas que no seran desnormalizadas de b2b  y formarán parte de las dimensiones
- * loan_payment
- * inventory_update
- *************************************************************
+/*
  Descartadas las tablas, no se tomarán en cuenta mas adelante, sicha información solo será tomada de 
  la tabla de productos y de granjeros
  * farm_activity 
  * farm_group
  
  */
-
