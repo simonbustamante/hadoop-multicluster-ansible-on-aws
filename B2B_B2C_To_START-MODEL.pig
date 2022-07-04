@@ -899,7 +899,7 @@ dim_loan_payment = FOREACH b2b_b2c GENERATE
                 loan_payment::date as loan_date:chararray,
                 loan_payment::quantity_paid as loan_quantity_paid:chararray;
 dim_loan_payment = DISTINCT dim_loan_payment;
-dim_loan_payment = ORDER dim_loan_payment BY farmer_id;
+/*dim_loan_payment = ORDER dim_loan_payment BY farmer_id;*/
 /*Dump dim_loan_payment;*/
 
 
@@ -908,19 +908,19 @@ dim_loan_payment = ORDER dim_loan_payment BY farmer_id;
  Almacenamiento de tablas desnormalizadas en HDFS  (OPCIONAL)
  Solo se debe descomentar las líneas correspondientes a STORE
  **************************************************************/
-
+/* ISSUE CONOCIDO - A VECES HAY QUE EJECUTAR EL SCRIPT VARIAS VECES POR CADA TABLA A GUARDAR */
 /* con esta opcion se guarda en la primera linea el nombre de los campos */
 
-STORE farmer_profile INTO '/star-model/farmer_profile' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE farmer_information INTO '/star-model/farmer_information' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE farmer_groups INTO '/star-model/farmer_groups' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE farmer_farm INTO '/star-model/farmer_farm' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+/*STORE farmer_profile INTO '/star-model/farmer_profile' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+/*STORE farmer_information INTO '/star-model/farmer_information' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+/*STORE farmer_groups INTO '/star-model/farmer_groups' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+/*STORE farmer_farm INTO '/star-model/farmer_farm' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 STORE farmer_product INTO '/star-model/farmer_product' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE farmer_loan_details INTO '/star-model/farmer_loan_details' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE farmer_balances INTO '/star-model/farmer_balances' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE farmer_sell_details INTO '/star-model/farmer_sell_details' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE dim_inventory_update INTO '/star-model/dim_inventory_update' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-/*STORE dim_loan_payment INTO '/star-model/dim_loan_payment' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+STORE farmer_loan_details INTO '/star-model/farmer_loan_details' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+/*STORE farmer_balances INTO '/star-model/farmer_balances' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+/*STORE farmer_sell_details INTO '/star-model/farmer_sell_details' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+/*STORE dim_inventory_update INTO '/star-model/dim_inventory_update' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+STORE dim_loan_payment INTO '/star-model/dim_loan_payment' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 
 
 /*
