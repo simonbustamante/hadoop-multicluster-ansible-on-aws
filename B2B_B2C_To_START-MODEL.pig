@@ -196,10 +196,9 @@ product = LOAD 'hdfs://master1.ansible.local:9000/b2b/product/part-m-00000' USIN
         product_price_kg:chararray,
         prod_kg_month:chararray
     );
-/*************************************************************
- PROCESO DE DESNORMALIACION POR PARTES
- **************************************************************/
- /* TABLAS RELACIONADAS AL GRANJERO */
+/********************************************************************************************
+ PROCESO DE DESNORMALIACION - TABLAS RELACIONADAS AL GRANJERO O BASE DE DATOS B2B 
+ ********************************************************************************************/
 
 /* join entre tabla de grupos */
 join_groups = JOIN groups BY id, farmer_group by groupid;
@@ -398,7 +397,7 @@ Tablas:
 
 
 /*************************************************************
- CARGA DE ARCHIVOS DE BASE DE DATOS B2C ALMACENADOS EN HDFS  
+PROCESO DE DESNORMALIACION - TABLAS RELACIONADAS A LA VENTA DE PRODUCTOS DEL GRANJERO O BASE DE DATOS B2C 
  **************************************************************/
 
 /* cargando tablas de ordenes */
@@ -533,7 +532,7 @@ manufacturer = LOAD 'hdfs://master1.ansible.local:9000/b2c/ps_manufacturer/part-
 
 
 /*************************************************************
- proceso de desnormalización 
+ proceso de desnormalización de B2C
  **************************************************************/
 
 /* join de tablas de orders */
