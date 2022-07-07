@@ -1,0 +1,258 @@
+/* creando base de datos */
+
+CREATE DATABASE IF NOT EXISTS farmerdb;
+USE farmerdb;
+
+/* Cargando tabla de perfil del granjero */
+
+CREATE EXTERNAL TABLE IF NOT EXISTS farmer_profile 
+( 
+  farmer_id STRING 
+) 
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/farmer_profile"
+tblproperties("skip.header.line.count"="1"); 
+
+/* Cargando información biográfica detallada del granjero */
+
+CREATE EXTERNAL TABLE IF NOT EXISTS farmer_information
+(
+  farmer_id STRING,
+  name STRING,
+  middle STRING,
+  surname STRING,
+  sex STRING,
+  address STRING,
+  contact STRING,
+  birthday STRING,
+  birthplace STRING,
+  birthcontry STRING,
+  religion STRING,
+  civilstatus STRING,
+  spouse STRING,
+  education STRING,
+  governmenti STRING
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/farmer_information"
+tblproperties("skip.header.line.count"="1"); 
+
+/* Cargando información del las granjas */
+
+CREATE EXTERNAL TABLE IF NOT EXISTS farmer_farm
+(
+  farmer_id STRING,
+  farmid STRING,
+  farm_name STRING,
+  farm_house STRING,
+  farm_street STRING,
+  farm_barangay STRING,
+  farm_municipality STRING,
+  farm_province STRING,
+  farm_region STRING
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/farmer_farm"
+tblproperties("skip.header.line.count"="1"); 
+
+
+/* Cargando productos del granjero */
+CREATE EXTERNAL TABLE IF NOT EXISTS farmer_product
+(
+  farmer_id STRING,
+  inventory_id STRING,
+  product_id STRING,
+  inventory_date STRING,
+  inventory_total_credit STRING,
+  inventory_total_kg STRING,
+  inventory_description STRING,
+  product_name STRING,
+  price_per_kg STRING,
+  kg_per_month STRING,
+  activity_id STRING,
+  activity_name STRING,
+  activity_description STRING
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/farmer_product"
+tblproperties("skip.header.line.count"="1"); 
+
+/* Cargando balances generales del granjero */
+CREATE EXTERNAL TABLE IF NOT EXISTS farmer_balances
+(
+  farmer_id STRING,
+  balance_id STRING,
+  farmer_balance_debt STRING,
+  farmer_balance_credit STRING,
+  farmer_balance_monthly_fee STRING,
+  farmer_description STRING
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/farmer_balances"
+tblproperties("skip.header.line.count"="1"); 
+
+/* Cargando grupos a los que pertenecen los granjeros */
+CREATE EXTERNAL TABLE IF NOT EXISTS farmer_groups
+(
+  farmer_id STRING,
+  groups_id STRING,
+  groups_name STRING,
+  groups_idnumber STRING,
+  groups_year STRING
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/farmer_groups"
+tblproperties("skip.header.line.count"="1"); 
+
+/* Cargando detalles de los prestamos asociados a los granjeros */
+CREATE EXTERNAL TABLE IF NOT EXISTS farmer_loan_details
+(
+  farmer_id STRING,
+  loan_id STRING,
+  loan_debt STRING,
+  time_to_pay STRING,
+  monthly_fee STRING,
+  date_of_approval STRING,
+  loan_status STRING,
+  loan_description STRING,
+  loan_type_id STRING,
+  loan_type_name STRING,
+  loan_type_description STRING,
+  loan_interest STRING 
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/farmer_loan_details"
+tblproperties("skip.header.line.count"="1"); 
+
+
+/* Cargando actualizaciones de inventario de las granjas de los granjeros */
+CREATE EXTERNAL TABLE IF NOT EXISTS dim_inventory_update
+(
+  farmer_id STRING,
+  inventory_update_id STRING,
+  inventory_id STRING,
+  quantity_kg STRING,
+  credit STRING,
+  dates STRING
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/dim_inventory_update"
+tblproperties("skip.header.line.count"="1"); 
+
+/* Cargando pagos realizados a prestamos de granjeros */
+CREATE EXTERNAL TABLE IF NOT EXISTS dim_loan_payment
+(
+  farmer_id STRING,
+  loan_payment_id STRING,
+  farmer_balance_id STRING,
+  loan_id STRING,
+  loan_date STRING,
+  loan_quantity_paid STRING
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/dim_loan_payment"
+tblproperties("skip.header.line.count"="1"); 
+
+/* Cargando detalles de las ventas realizadas en el sitio web con productos de los granjeros */
+CREATE EXTERNAL TABLE IF NOT EXISTS farmer_sell_details
+(
+  farmer_id STRING,
+  id_order STRING,
+  order_reference STRING,
+  product_id STRING,
+  product_name STRING,
+  product_quantity STRING,
+  product_price STRING,
+  product_quantity_in_stock STRING,
+  product_quantity_refunded STRING,
+  product_quantity_return STRING,
+  product_quantity_reinjected STRING,
+  product_quantity_discount STRING,
+  product_attribute_id STRING,
+  product_ean13 STRING,
+  product_isbn STRING,
+  product_upc STRING,
+  product_mpn STRING,
+  product_reference STRING,
+  product_supplier_reference STRING,
+  product_weight STRING,
+  total_discounts STRING,
+  total_discounts_tax_incl STRING,
+  total_discounts_tax_excl STRING,
+  total_paid STRING,
+  total_paid_tax_incl STRING,
+  total_paid_tax_excl STRING,
+  total_paid_real STRING,
+  total_products STRING,
+  total_products_wt STRING,
+  total_shipping STRING,
+  total_price_tax_incl STRING,
+  total_price_tax_excl STRING,
+  total_refunded_tax_excl STRING,
+  total_refunded_tax_incl STRING,
+  total_shipping_price_tax_incl STRING,
+  total_shipping_price_tax_excl STRING,
+  shipping_cost_tax_excl STRING,
+  shipping_cost_tax_incl STRING,
+  id_customization STRING,
+  reduction_percent STRING,
+  reduction_amount STRING,
+  reduction_amount_tax_incl STRING,
+  reduction_amount_tax_excl STRING,
+  group_reduction STRING,
+  id_shop_group STRING,
+  id_shop STRING,
+  id_carrier STRING,
+  id_lang STRING,
+  id_customer STRING,
+  id_cart STRING,
+  id_currency STRING,
+  d_address_delivery STRING,
+  id_address_invoice STRING,
+  current_state STRING,
+  payment STRING,
+  conversion_rate STRING,
+  module STRING,
+  recyclable STRING,
+  gift STRING,
+  gift_message STRING,
+  mobile_theme STRING,
+  shipping_number STRING,
+  carrier_tax_rate STRING,
+  total_wrapping STRING,
+  total_wrapping_tax_incl STRING,
+  total_wrapping_tax_excl STRING,
+  round_mode STRING,
+  round_type STRING,
+  invoice_number STRING,
+  delivery_number STRING,
+  invoice_date STRING,
+  delivery_date STRING,
+  valid STRING,
+  date_add STRING,
+  date_upd STRING,
+  note STRING,
+  id_order_detail STRING,
+  id_warehouse STRING,
+  id_tax_rules_group STRING,
+  tax_computation_method STRING,
+  tax_name STRING,
+  tax_rate STRING,
+  ecotax STRING,
+  ecotax_tax_rate STRING,
+  discount_quantity_applied STRING,
+  download_hash STRING,
+  download_nb STRING,
+  download_deadline STRING,
+  unit_price_tax_incl STRING,
+  unit_price_tax_excl STRING,
+  purchase_supplier_price STRING,
+  original_product_price STRING,
+  original_wholesale_price STRING,
+  id_order_carrier STRING,
+  total_weight STRING,
+  tracking_number
+)
+row format delimited fields terminated BY "," lines terminated BY "\n" 
+location "/star-model/farmer_sell_details"
+tblproperties("skip.header.line.count"="1"); 
