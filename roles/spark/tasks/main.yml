@@ -83,3 +83,19 @@
   #SPARK COMMAND TO TEST CONFIGURATION BELOW
   #YOU NEED TO START RESOURCE MANAGER IN MASTER
   #spark-submit --deploy-mode cluster --class org.apache.spark.examples.SparkPi /usr/local/spark/examples/jars/spark-examples_2.12-3.2.1.jar 10
+
+- name: Ensure required packages are installed
+  become: true
+  apt:
+    name:
+      - python3
+      - python3-pip
+    state: latest
+
+- name: Install Required pip3 modules
+  pip:
+    name:
+      - numpy
+      - pandas
+    state: present
+    executable: pip3

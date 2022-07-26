@@ -130,6 +130,7 @@
       - thrift-sasl
       - pyhs2
       - Jaydebeapi
+      - jupyter
     state: present
     executable: pip3
 

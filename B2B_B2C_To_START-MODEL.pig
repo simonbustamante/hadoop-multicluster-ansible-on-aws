@@ -196,9 +196,10 @@ product = LOAD 'hdfs://master1.ansible.local:9000/b2b/product/part-m-00000' USIN
         product_price_kg:chararray,
         prod_kg_month:chararray
     );
-/********************************************************************************************
- PROCESO DE DESNORMALIACION - TABLAS RELACIONADAS AL GRANJERO O BASE DE DATOS B2B 
- ********************************************************************************************/
+/*************************************************************
+ PROCESO DE DESNORMALIACION POR PARTES
+ **************************************************************/
+ /* TABLAS RELACIONADAS AL GRANJERO */
 
 /* join entre tabla de grupos */
 join_groups = JOIN groups BY id, farmer_group by groupid;
@@ -390,6 +391,25 @@ Tablas:
 - mayani_request_inventory_mayani_product_inventory
 */
 
+/* la generación de la nueva tabla será de la siguiente forma */
+mayani_inventory_process = FOREACH join_whole_mayani GENERATE
+    join_mayani_b2c::join_mayani::join_req_prod_inv::join_prod_inv::mayani_product_inventory::id as mProductInventoryId,
+    join_mayani_b2c::join_mayani::join_req_prod_inv::join_prod_inv::mayani_product_inventory::description as mProductInventoryDescription,
+    join_mayani_b2c::join_mayani::join_req_prod_inv::join_prod_inv::mayani_product_inventory::total_inventory_kg as mProductInventoryTotalKg,
+    join_mayani_b2c::join_mayani::join_req_prod_inv::join_prod_inv::mayani_product_inventory::total_value as mProductInventoryTotalValue,
+    join_mayani_b2c::join_mayani::join_req_prod_inv::mayani_request_inventory::id as mRequestInventoryId,
+    join_mayani_b2c::join_mayani::join_req_prod_inv::mayani_request_inventory::quantity_kg as mRequestInventoryKg,
+    join_mayani_b2c::join_mayani::join_req_prod_inv::mayani_request_inventory::debt as mRequestInventoryDebt,
+    join_mayani_b2c::join_mayani::join_req_prod_inv::mayani_request_inventory::date as mRequestInventoryDate,
+    join_mayani_b2c::join_mayani::join_req_prod_inv::mayani_request_inventory::description as mRequestInventoryDescription,
+    join_mayani_b2c::join_mayani::may_req_inv_farm_inv::farm_inventory_id as farmInventoryId,
+    join_mayani_b2c::b2_cproduct_request::id as b2cProductRequestId,
+    join_mayani_b2c::b2_cproduct_request::description as b2cProductRequestDescription,
+    join_mayani_b2c::b2_cproduct_request::quantity_kg as b2cProductRequestKg,
+    join_mayani_b2c::b2_cproduct_request::total_debt as b2cProductRequestTotalDebt,
+    join_mayani_b2c::b2_cproduct_request::date as b2cProductRequestDate,
+    mayani_request_inventory_farmer_balance::farmer_balance_id as farmerBalanceId;
+
 
 /*********************************************************************************************/
 /*********************************************************************************************/
@@ -397,7 +417,7 @@ Tablas:
 
 
 /*************************************************************
-PROCESO DE DESNORMALIACION - TABLAS RELACIONADAS A LA VENTA DE PRODUCTOS DEL GRANJERO O BASE DE DATOS B2C 
+ CARGA DE ARCHIVOS DE BASE DE DATOS B2C ALMACENADOS EN HDFS  
  **************************************************************/
 
 /* cargando tablas de ordenes */
@@ -532,7 +552,7 @@ manufacturer = LOAD 'hdfs://master1.ansible.local:9000/b2c/ps_manufacturer/part-
 
 
 /*************************************************************
- proceso de desnormalización de B2C
+ proceso de desnormalización 
  **************************************************************/
 
 /* join de tablas de orders */
@@ -911,17 +931,17 @@ dim_loan_payment = FOREACH farmer_loan_payment GENERATE
 /* SE RECOMIENDA EJECUTAR EL SCRIPT POR CADA TABLA A ALMACENAR, DESCOMENTAR Y COMENTAR
  LO QUE SE ALMACENA Y LO QUE NO RESPECTIVAMENTE POR CADA EJECUCIÓN*/
 
-/*STORE farmer_profile INTO '/star-model/farmer_profile' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE farmer_information INTO '/star-model/farmer_information' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
+/*STORE farmer_profile INTO '/star-model/farmer_profile' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+/*STORE farmer_information INTO '/star-model/farmer_information' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 STORE farmer_groups INTO '/star-model/farmer_groups' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 STORE farmer_farm INTO '/star-model/farmer_farm' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 STORE farmer_product INTO '/star-model/farmer_product' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 STORE farmer_loan_details INTO '/star-model/farmer_loan_details' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE farmer_balances INTO '/star-model/farmer_balances' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+STORE farmer_balances INTO '/star-model/farmer_balances' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 STORE farmer_sell_details INTO '/star-model/farmer_sell_details' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-/*STORE dim_inventory_update INTO '/star-model/dim_inventory_update' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
-STORE dim_loan_payment INTO '/star-model/dim_loan_payment' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
-
+STORE dim_inventory_update INTO '/star-model/dim_inventory_update' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+/*STORE dim_loan_payment INTO '/star-model/dim_loan_payment' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');*/
+STORE mayani_inventory_process INTO '/star-model/mayani_inventory_process' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',', 'NO_MULTILINE', 'UNIX', 'WRITE_OUTPUT_HEADER');
 
 /*
  Descartadas las tablas, no se tomarán en cuenta mas adelante, sicha información solo será tomada de 
